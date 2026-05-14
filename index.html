@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Afit Suradiradja | Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+  body { 
+    background: #0a0908; 
+    color: #fff; 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    overflow-x: hidden; 
+  }
+  ::-webkit-scrollbar { width: 0px; }
+  
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+  }
+  @keyframes pulse {
+    0% { opacity: 0.3; }
+    50% { opacity: 1; }
+    100% { opacity: 0.3; }
+  }
+  .floating-pill {
+    animation: float 6s ease-in-out infinite;
+  }
+  .proj-sidebar { width: 340px; flex-direction: column; height: 100vh; border-right: 1px solid rgba(255,255,255,0.05); padding: 120px 40px 40px; }
+  .proj-wrapper { flex-direction: row; }
+  .reel-slide { height: 80%; margin-bottom: 5%; }
+  @media (max-width: 800px) {
+    .proj-sidebar { width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 100px 20px 20px !important; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center; }
+    .proj-sidebar > h2 { display: none; }
+    .proj-wrapper { flex-direction: column !important; }
+    .reel-slide { height: auto !important; aspect-ratio: 4/3; margin-bottom: 40px !important; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useRef, useEffect, useCallback } = React;
+
+/* ─── Data ─────────────────────────────────────────────────────── */
+const HOME_SLIDES = [
+  { id: "vfx", type: "vfx", eyebrow: "PORTFOLIO", category: "COMPOSITING", title: "VFX", year: "2024", author: "AFIT SURADIRADJA", gradient: "linear-gradient(135deg,#0d0720 0%,#16213e 45%,#1a3a5c 80%,#0a1628 100%)" },
+  { id: "3d", type: "3d", eyebrow: "PORTFOLIO", category: "3D DESIGN", title: "3D ART", year: "2024", author: "AFIT SURADIRADJA", gradient: "linear-gradient(160deg,#0a1a0d 0%,#1b4332 45%,#2d6a4f 80%,#081c15 100%)" },
+  { id: "motion", type: "motion", eyebrow: "PORTFOLIO", category: "ANIMATION", title: "MOTION GRAPHICS", year: "2024", author: "AFIT SURADIRADJA", gradient: "linear-gradient(120deg,#1c0800 0%,#3d1a00 45%,#6b3a2a 80%,#2c1408 100%)" }
+];
+
+const PORTFOLIO_ITEMS = [
+  { id: "v1", type: "vfx", eyebrow: "COMPOSITING · 2024", category: "VFX", title: "NEON TEARS", year: "2024", author: "Afit Suradiradja", gradient: "linear-gradient(135deg,#0d0720 0%,#16213e 45%,#1a3a5c 80%,#0a1628 100%)", desc: "A cyberpunk short film showcasing advanced compositing and set extensions.", stats: { software: "Nuke", render: "Mantra", runtime: "02:15" } },
+  { id: "v2", type: "vfx", eyebrow: "CLEANUP · 2023", category: "VFX", title: "INVISIBLE FIXES", year: "2023", author: "Afit Suradiradja", gradient: "linear-gradient(140deg,#04080c 0%,#0a1628 52%,#152232 82%,#0c1820 100%)", desc: "Showcase of invisible wire removals and complex rig cleanups.", stats: { software: "After Effects", render: "-", runtime: "03:00" } },
+  { id: "d1", type: "3d", eyebrow: "3D ART · 2024", category: "3D", title: "ABSTRACT SPHERES", year: "2024", author: "Afit Suradiradja", gradient: "linear-gradient(160deg,#0a1a0d 0%,#1b4332 45%,#2d6a4f 80%,#081c15 100%)", desc: "Exploration of procedural textures, subsurface scattering, and lighting.", stats: { software: "Cinema 4D", render: "Octane", runtime: "01:10" } },
+  { id: "d2", type: "3d", eyebrow: "PRODUCT · 2023", category: "3D", title: "TECH REVEAL", year: "2023", author: "Afit Suradiradja", gradient: "linear-gradient(150deg,#1a0000 0%,#4a0800 42%,#7a2000 72%,#2d0a0a 100%)", desc: "A sleek product reveal animation focusing on macro details.", stats: { software: "Blender", render: "Cycles", runtime: "01:30" } },
+  { id: "m1", type: "motion", eyebrow: "ANIMATION · 2024", category: "MOTION", title: "KINETIC FLOW", year: "2024", author: "Afit Suradiradja", gradient: "linear-gradient(120deg,#1c0800 0%,#3d1a00 45%,#6b3a2a 80%,#2c1408 100%)", desc: "Fluid motion graphics driven by heavy bass music.", stats: { software: "After Effects", render: "Native", runtime: "00:45" } },
+  { id: "m2", type: "motion", eyebrow: "BRANDING · 2023", category: "MOTION", title: "BRAND IDENT", year: "2023", author: "Afit Suradiradja", gradient: "linear-gradient(130deg,#080e1e 0%,#192540 48%,#2c4a6e 78%,#101e34 100%)", desc: "Dynamic typography and shape layers for an upcoming festival.", stats: { software: "After Effects", render: "Native", runtime: "00:15" } }
+];
+
+const Icons = {
+  email: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>,
+  linkedin: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>,
+  instagram: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>,
+  youtube: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>,
+  grid: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>,
+  vfx: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>,
+  art3d: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>,
+  motion: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+};
+
+/* ─── Sub-components ────────────────────────────────────────────── */
+function StatItem({ label, value }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+      <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.4)" }}>{label}</div>
+      <div style={{ fontSize: 20, fontWeight: 600, color: "rgba(255,255,255,0.95)" }}>{value}</div>
+    </div>
+  );
+}
+
+function SlideContent({ slide, withModal, onExplore }) {
+  const pad = "clamp(20px, 6dvh, 64px)";
+  const [hoverRight, setHoverRight] = useState(false);
+  return (
+    <div style={{ position: "relative", width: "100%", height: "100%", color: "#fff" }}>
+      {withModal && (
+        <div style={{ position: "absolute", left: pad, top: "clamp(20px,5.5dvh,56px)", display: "flex", flexDirection: "column", gap: 10, pointerEvents: 'none' }}>
+          <div style={{ fontSize: "clamp(1rem,2dvh,1.8rem)", fontWeight: 500, color: "rgba(255,255,255,0.88)" }}>{slide.year}</div>
+          <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.6)" }}>{slide.eyebrow}</div>
+        </div>
+      )}
+      <div style={{ position: "absolute", left: pad, bottom: "9dvh", display: "flex", flexDirection: "column", gap: 14, pointerEvents: 'none' }}>
+        <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.4em", color: "rgba(255,255,255,0.5)" }}>{slide.category}</div>
+        <h2 style={{ fontWeight: 800, textTransform: "uppercase", fontSize: "clamp(2rem,8dvh,8rem)", lineHeight: 0.92, letterSpacing: "-0.04em", color: "#f6efe2" }}>{slide.title}</h2>
+        {withModal && (
+          <div style={{ display: "flex", gap: 12, fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.3em" }}>
+            <span style={{ color: "rgba(255,255,255,0.4)" }}>AUTHOR</span>
+            <span style={{ color: "rgba(255,255,255,0.88)" }}>{slide.author}</span>
+          </div>
+        )}
+      </div>
+      <div 
+        onMouseEnter={() => setHoverRight(true)} 
+        onMouseLeave={() => setHoverRight(false)}
+        onClick={(e) => { e.stopPropagation(); onExplore(slide); }}
+        style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '40%', cursor: 'pointer', background: hoverRight ? 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 100%)' : 'transparent', transition: 'background 0.4s ease', display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', paddingRight: pad, paddingBottom: "clamp(16px,5dvh,52px)" }}
+      >
+        <button data-nodrag style={{ display: "flex", alignItems: "center", gap: 14, border: "1px solid rgba(255,255,255,0.28)", borderRadius: 999, padding: "13px 28px", fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.3em", color: "#fff", fontFamily: "'Plus Jakarta Sans',sans-serif", transition: "all 300ms", background: hoverRight ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.06)", backdropFilter: "blur(12px)", transform: hoverRight ? "scale(1.04)" : "scale(1)" }}>
+          {withModal ? "EXPLORE DETAIL" : "EXPLORE WORK"} <span style={{ fontSize: 16 }}>→</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Cinema Reel Component ─────────────────────────────────────── */
+function CinemaReel({ mode, slides, withModal, onExplore }) {
+  const N = slides.length;
+  if (N === 0) return <div style={{ padding: 40 }}>No projects found.</div>;
+
+  const isSticky = mode === 'sticky';
+  const TOTAL = N;
+  const wrapperRef = useRef(null);
+  const secRef = useRef(null), trackRef = useRef(null);
+  const outerRefs = useRef([]), imgRefs = useRef([]), contentRefs = useRef([]);
+  const idxR = useRef(0), prevR = useRef(0);
+  const yR = useRef(0), tgtR = useRef(0), wTs = useRef(0);
+  const dragR = useRef({ active: false, sy: 0, st: 0, delta: 0 });
+  const onSec = useRef(false);
+  
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [openSlide, setOpenSlide] = useState(null);
+
+  const layR = useRef(null);
+
+  const getLay = useCallback(() => {
+    const vh = isSticky ? window.innerHeight : (secRef.current ? secRef.current.clientHeight : window.innerHeight);
+    let slideH = vh * 0.80;
+    let pitch = vh * 0.85;
+    let topPad = vh * 0.10;
+    if (outerRefs.current[0]) {
+       slideH = outerRefs.current[0].clientHeight;
+       const mb = parseFloat(window.getComputedStyle(outerRefs.current[0]).marginBottom) || (vh * 0.05);
+       pitch = slideH + mb;
+       topPad = (vh - slideH) / 2;
+    }
+    return { vh, pitch, slideH, topPad };
+  }, [isSticky]);
+
+  const setIdx = useCallback((next) => {
+    const clampedNext = Math.max(0, Math.min(N - 1, next));
+    if (clampedNext === idxR.current) return;
+    prevR.current = idxR.current; idxR.current = clampedNext;
+    tgtR.current = layR.current.topPad - clampedNext * layR.current.pitch;
+    setActiveIdx(clampedNext);
+  }, [N]);
+
+  useEffect(() => {
+    layR.current = getLay();
+    yR.current = layR.current.topPad; tgtR.current = layR.current.topPad;
+    
+    let raf, autoTs = null;
+    function runAuto(ts) {
+      if (!autoTs) autoTs = ts;
+      const el = ts - autoTs;
+      const fp = 1 - Math.pow(1 - Math.min(el / 1000, 1), 2);
+      for (let i = 0; i < TOTAL; i++) { if (outerRefs.current[i]) outerRefs.current[i].style.opacity = fp; }
+      if (el < 1000) raf = requestAnimationFrame(runAuto);
+      else raf = requestAnimationFrame(tick);
+    }
+
+    function tick() {
+      const now = performance.now();
+      if (!dragR.current.active && now - wTs.current > 100) {
+        const dy = tgtR.current - yR.current;
+        yR.current = Math.abs(dy) < 0.5 ? tgtR.current : yR.current + dy * 0.11;
+      }
+      if (trackRef.current) trackRef.current.style.transform = `translate3d(0,${yR.current}px,0)`;
+      
+      const { pitch, slideH, vh } = layR.current, vc = vh / 2;
+      for (let i = 0; i < TOTAL; i++) {
+        const top = i * pitch + yR.current, sc = top + slideH / 2, dy = sc - vc, dn = Math.abs(dy) / slideH;
+        if (imgRefs.current[i]) imgRefs.current[i].style.transform = `translate3d(0,${(-dy / 1.2).toFixed(2)}px,0)`;
+        const c = contentRefs.current[i]; if (!c) continue;
+        if (dn > 2) { c.style.opacity = "0"; c.style.filter = "blur(16px)"; c.style.transform = ""; continue; }
+        
+        const isA = i === idxR.current, isL = i === prevR.current && prevR.current !== idxR.current;
+        let op = 0, bl = 16, cy = 0;
+        if (isA) { const t = Math.max(0, Math.min(1, 1 - dn / 0.55)); op = t*t*(3-2*t); bl = (1 - op) * 14; cy = (1 - op) * 64 * Math.sign(dy || 1); }
+        else if (isL) { const f = Math.max(0, 1 - Math.max(0, dn - 0.6) / 0.6); op = f; bl = (1 - f) * 6; cy = -dy * 0.42; }
+        c.style.opacity = op.toFixed(3); c.style.filter = `blur(${bl.toFixed(2)}px)`; c.style.transform = `translate3d(0,${cy.toFixed(2)}px,0)`;
+      }
+      raf = requestAnimationFrame(tick);
+    }
+
+    raf = requestAnimationFrame(runAuto);
+    const sec = secRef.current; if (!sec) return;
+
+    if (isSticky) {
+      const onS = () => {
+        if (!wrapperRef.current) return;
+        const rect = wrapperRef.current.getBoundingClientRect();
+        const maxS = (N - 1) * window.innerHeight;
+        const s = Math.max(0, Math.min(maxS, -rect.top));
+        const prog = maxS === 0 ? 0 : s / maxS;
+        tgtR.current = layR.current.topPad - prog * ((N - 1) * layR.current.pitch);
+        const nr = Math.round(prog * (N - 1));
+        if (nr !== idxR.current) { prevR.current = idxR.current; idxR.current = nr; setActiveIdx(nr); }
+      };
+      window.addEventListener("scroll", onS);
+      onS(); // init
+      return () => { cancelAnimationFrame(raf); window.removeEventListener("scroll", onS); };
+    } else {
+      const onW = e => {
+        if (!onSec.current || e.target?.closest("[data-nodrag]")) return;
+        const delta = Math.max(-200, Math.min(200, e.deltaY));
+        if (idxR.current === 0 && delta < 0) return;
+        if (idxR.current === N - 1 && delta > 0) return;
+        e.preventDefault();
+        yR.current -= delta; wTs.current = performance.now();
+        const nr = Math.round((layR.current.topPad - yR.current) / layR.current.pitch);
+        if (nr !== idxR.current) setIdx(nr);
+      };
+      sec.addEventListener("wheel", onW, { passive: false });
+      sec.addEventListener("pointerenter", () => onSec.current = true);
+      sec.addEventListener("pointerleave", () => onSec.current = false);
+      return () => { cancelAnimationFrame(raf); sec.removeEventListener("wheel", onW); };
+    }
+  }, [getLay, setIdx, N, isSticky]);
+
+  const handleExplore = (slide) => {
+    if (withModal) setOpenSlide(slide);
+    else onExplore(slide);
+  };
+
+  const reelContent = (
+    <section ref={secRef} style={{ position: isSticky ? "sticky" : "relative", top: 0, width: "100%", height: "100vh", overflow: "hidden", background: isSticky ? "transparent" : "#0a0908" }}>
+      <svg style={{ position: "absolute", width: 0, height: 0, overflow: "hidden" }} aria-hidden>
+        <defs><filter id="crbl" x="-5%" y="-25%" width="110%" height="150%"><feGaussianBlur in="SourceGraphic" stdDeviation="0 0" /></filter></defs>
+      </svg>
+      <div ref={trackRef} style={{ position: "absolute", inset: 0, top: 0, willChange: "transform", paddingLeft: "clamp(16px,7.5%,80px)", paddingRight: "clamp(16px,7.5%,80px)" }}>
+        <div style={{ position: 'absolute', top: -5000, bottom: -5000, left: 0, width: 'clamp(30px, 6vw, 70px)', background: 'rgba(255,255,255,0.035)', WebkitMaskImage: `url("data:image/svg+xml;utf8,<svg width='60' height='80' viewBox='0 0 60 80' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' clip-rule='evenodd' d='M0 0H60V80H0V0ZM20 20C20 17 22 15 25 15H35C38 15 40 17 40 20V60C40 63 38 65 35 65H25C22 65 20 63 20 60V20Z' fill='black'/></svg>")`, WebkitMaskRepeat: 'repeat-y', WebkitMaskSize: '100% clamp(40px, 8vw, 80px)', pointerEvents: 'none', zIndex: 0 }} />
+        <div style={{ position: 'absolute', top: -5000, bottom: -5000, right: 0, width: 'clamp(30px, 6vw, 70px)', background: 'rgba(255,255,255,0.035)', WebkitMaskImage: `url("data:image/svg+xml;utf8,<svg width='60' height='80' viewBox='0 0 60 80' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' clip-rule='evenodd' d='M0 0H60V80H0V0ZM20 20C20 17 22 15 25 15H35C38 15 40 17 40 20V60C40 63 38 65 35 65H25C22 65 20 63 20 60V20Z' fill='black'/></svg>")`, WebkitMaskRepeat: 'repeat-y', WebkitMaskSize: '100% clamp(40px, 8vw, 80px)', pointerEvents: 'none', zIndex: 0 }} />
+        {slides.map((slide, i) => {
+          const isOpen = openSlide?.id === slide.id;
+          return (
+            <div key={slide.id} className="reel-slide" ref={el => outerRefs.current[i] = el} style={{ position: "relative", width: "100%", perspective: "2000px", opacity: 0 }}>
+              <div style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden", borderRadius: 40, transformOrigin: "0% 50%", transformStyle: "preserve-3d", transform: isOpen ? "rotateY(12deg)" : "rotateY(0deg)", transition: "all 700ms cubic-bezier(0.22,1,0.36,1)" }}>
+                <div ref={el => imgRefs.current[i] = el} style={{ position: "absolute", top: "50%", left: "50%", width: "100vw", height: "120dvh", marginTop: "-60dvh", marginLeft: "-50vw", willChange: "transform", background: slide.gradient }}>
+                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg,rgba(0,0,0,0.5) 0%,rgba(0,0,0,0.05) 25%,rgba(0,0,0,0.05) 65%,rgba(0,0,0,0.65) 100%)" }} />
+                  <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", fontSize: "clamp(120px,25vw,280px)", fontWeight: 800, color: "rgba(255,255,255,0.03)", letterSpacing: "-0.05em", lineHeight: 1 }}>{String(i + 1).padStart(2, "0")}</div>
+                </div>
+                <div ref={el => contentRefs.current[i] = el} style={{ position: "absolute", inset: 0, willChange: "opacity,filter,transform", opacity: 0, filter: "blur(16px)" }}>
+                  <SlideContent slide={slide} withModal={withModal} onExplore={handleExplore} />
+                </div>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 30, background: 'linear-gradient(180deg, #0a0908 0%, transparent 15%, transparent 85%, #0a0908 100%)' }} />
+      <div style={{ position: "absolute", right: "clamp(4px,1.5%,20px)", top: "50%", transform: "translateY(-50%)", zIndex: 40, display: "flex", flexDirection: "column", alignItems: "center", gap: 10, opacity: openSlide ? 0 : 1, transition: "opacity 400ms", background: 'radial-gradient(ellipse at center, rgba(10,9,8,0.95) 0%, rgba(10,9,8,0.8) 40%, rgba(10,9,8,0) 70%)', padding: '40px 20px', borderRadius: 999 }}>
+        <div style={{ fontStyle: "italic", fontSize: 12, color: "rgba(255,255,255,0.55)" }}>{String(activeIdx + 1).padStart(2, "0")}</div>
+        <div data-nodrag style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+          {Array.from({ length: N }).map((_, i) => (
+            <button key={i} data-nodrag onClick={e => { e.stopPropagation(); setIdx(i); }} style={{ width: 20, height: 20, display: "flex", alignItems: "center", justifyContent: "center", background: "none", border: "none", cursor: "pointer", padding: 0 }}>
+              <span style={{ borderRadius: "50%", width: i === activeIdx ? 6 : 4, height: i === activeIdx ? 6 : 4, background: i === activeIdx ? "rgba(241,231,210,0.95)" : "rgba(255,255,255,0.22)", display: "block", transition: "all 320ms" }} />
+            </button>
+          ))}
+        </div>
+        <div style={{ fontStyle: "italic", fontSize: 12, color: "rgba(255,255,255,0.3)" }}>{String(N).padStart(2, "0")}</div>
+      </div>
+
+      {withModal && (
+        <>
+          <div data-nodrag onClick={() => setOpenSlide(null)} style={{ position: "absolute", zIndex: 40, top: "10%", height: "80%", left: "clamp(16px,7.5%,80px)", right: "clamp(16px,7.5%,80px)", borderRadius: 40, backgroundColor: openSlide ? "rgba(10,9,8,0.4)" : "rgba(10,9,8,0)", backdropFilter: openSlide ? "blur(14px)" : "blur(0px)", pointerEvents: openSlide ? "auto" : "none", transition: "all 600ms" }} />
+          <aside data-nodrag style={{ position: "absolute", zIndex: 50, top: "10%", height: "80%", right: "clamp(16px,7.5%,80px)", width: "min(600px, 52%)", borderRadius: 40, overflow: "hidden", color: "white", background: "linear-gradient(180deg,rgba(15,12,12,0.92) 0%,rgba(10,9,8,0.95) 100%)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.08)", transform: openSlide ? "translateX(0)" : "translateX(150%)", transition: "all 700ms cubic-bezier(0.22,1,0.36,1)", boxShadow: openSlide ? "-30px 0 80px -20px rgba(0,0,0,0.7)" : "none" }}>
+            {openSlide && (
+              <div style={{ height: "100%", width: "100%", overflowY: "auto", padding: "60px 40px" }}>
+                <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.3em', opacity: 0.5, marginBottom: 15 }}>{openSlide.category}</div>
+                <h2 style={{ fontSize: 'clamp(2.5rem, 4vw, 4rem)', fontWeight: 800, marginBottom: 20, lineHeight: 1 }}>{openSlide.title}</h2>
+                <div style={{ fontSize: 14, opacity: 0.8, marginBottom: 40 }}>{openSlide.author} · {openSlide.year}</div>
+                <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 40 }}></div>
+                <p style={{ fontSize: '1.1rem', lineHeight: 1.8, opacity: 0.8, marginBottom: 40 }}>{openSlide.desc}</p>
+                {openSlide.stats && (
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 20, marginBottom: 40 }}>
+                    <StatItem label="Software" value={openSlide.stats.software} />
+                    <StatItem label="Render" value={openSlide.stats.render} />
+                    <StatItem label="Runtime" value={openSlide.stats.runtime} />
+                  </div>
+                )}
+                <button onClick={() => setOpenSlide(null)} style={{ position: 'absolute', top: 20, right: 20, background: 'rgba(255,255,255,0.1)', border: 'none', color: '#fff', width: 40, height: 40, borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, transition: 'background 0.2s' }} onMouseEnter={e => e.currentTarget.style.background='rgba(255,255,255,0.2)'} onMouseLeave={e => e.currentTarget.style.background='rgba(255,255,255,0.1)'}>✕</button>
+              </div>
+            )}
+          </aside>
+        </>
+      )}
+    </section>
+  );
+
+  if (isSticky) {
+    return (
+      <div ref={wrapperRef} style={{ height: `${N * 100}vh`, position: 'relative', zIndex: 10 }}>
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', pointerEvents: 'none' }}>
+          {Array.from({ length: N }).map((_, i) => (
+            <div key={i} style={{ height: '100vh', scrollSnapAlign: 'start' }} />
+          ))}
+        </div>
+        {reelContent}
+      </div>
+    );
+  }
+  return reelContent;
+}
+
+/* ─── Page Components ───────────────────────────────────────────── */
+function Navbar({ route, setRoute }) {
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  return (
+    <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', pointerEvents: 'none', zIndex: 100, display: 'flex', justifyContent: 'center', transition: 'padding 0.4s ease', paddingTop: scrolled ? 16 : 32 }}>
+      <nav style={{ pointerEvents: 'auto', padding: '16px 36px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: scrolled ? 'rgba(15,15,15,0.85)' : 'rgba(15,15,15,0.4)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 999, transition: 'all 0.4s cubic-bezier(0.22,1,0.36,1)', gap: 50, boxShadow: scrolled ? '0 10px 40px -10px rgba(0,0,0,0.5)' : 'none' }}>
+        <div onClick={() => setRoute('home')} style={{ fontSize: 20, fontWeight: 800, cursor: 'pointer', letterSpacing: '-0.03em' }}>afitsrdj.</div>
+        <div style={{ display: 'flex', gap: 28, fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+           <span onClick={() => setRoute('home')} style={{ cursor: 'pointer', opacity: route === 'home' ? 1 : 0.5, transition: 'opacity 0.2s' }}>Home</span>
+           <span onClick={() => setRoute('projects')} style={{ cursor: 'pointer', opacity: route === 'projects' ? 1 : 0.5, transition: 'opacity 0.2s' }}>Projects</span>
+           <span onClick={() => setRoute('about')} style={{ cursor: 'pointer', opacity: route === 'about' ? 1 : 0.5, transition: 'opacity 0.2s' }}>About</span>
+           <span onClick={() => setRoute('contact')} style={{ cursor: 'pointer', opacity: route === 'contact' ? 1 : 0.5, transition: 'opacity 0.2s' }}>Contact</span>
+        </div>
+      </nav>
+    </div>
+  );
+}
+
+function Footer() {
+  return (
+    <footer style={{ padding: '150px 10%', background: '#050404', borderTop: '1px solid rgba(255,255,255,0.05)', width: '100%', position: 'relative', zIndex: 10 }}>
+      <h2 style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', fontWeight: 700, marginBottom: 20, letterSpacing: '-0.03em' }}>Let's get to know each other.</h2>
+      <a href="mailto:afit14.as@gmail.com" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#fff', textDecoration: 'none', display: 'block', marginBottom: 60, fontWeight: 300, transition: 'opacity 0.3s' }}>Get in touch. →</a>
+      <div style={{ display: 'flex', gap: 30, marginBottom: 40 }}>
+        <a href="https://www.instagram.com/afitsrdj" target="_blank" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '1rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.2em' }}>Instagram</a>
+        <a href="https://www.linkedin.com/in/afit-suradiradja/" target="_blank" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '1rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.2em' }}>LinkedIn</a>
+        <a href="https://youtube.com" target="_blank" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '1rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.2em' }}>YouTube</a>
+        <a href="mailto:afit14.as@gmail.com" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '1rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.2em' }}>Mail</a>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', color: 'rgba(255,255,255,0.3)', fontSize: '0.9rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+        <span>© afitsrdj - 2025</span>
+      </div>
+    </footer>
+  );
+}
+
+function FloatingPill({ label, top, left, right, bottom, delay }) {
+  return (
+    <div className="floating-pill" style={{ 
+      position: 'absolute', top, left, right, bottom, animationDelay: delay,
+      padding: '14px 28px', borderRadius: 999, border: '1px solid rgba(255,255,255,0.1)',
+      background: 'rgba(255,255,255,0.02)', backdropFilter: 'blur(12px)',
+      fontSize: 11, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase',
+      cursor: 'default', transition: 'all 0.4s ease', color: 'rgba(255,255,255,0.7)', zIndex: 5
+    }}
+    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.transform = 'scale(1.05)'; }}
+    onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.color = 'rgba(255,255,255,0.7)'; e.currentTarget.style.transform = 'scale(1)'; }}
+    >
+      {label}
+    </div>
+  )
+}
+
+function Hero() {
+  return (
+    <section style={{ position: 'relative', height: '100vh', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+      <video 
+        src="https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-connection-with-moving-lines-and-dots-27361-large.mp4" 
+        autoPlay loop muted playsInline
+        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.15, zIndex: 0 }}
+      />
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at center, transparent 0%, #0a0908 90%)', zIndex: 1 }} />
+      
+      <div style={{ position: 'relative', zIndex: 10, textAlign: 'center' }}>
+         <h1 style={{ fontSize: 'clamp(4rem, 10vw, 8rem)', fontWeight: 800, letterSpacing: '-0.04em', background: 'linear-gradient(180deg, #ffffff 0%, #a0a0a0 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0, lineHeight: 1 }}>
+           Afit Suradiradja
+         </h1>
+         <div style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: 'rgba(255,255,255,0.6)', fontWeight: 400, marginTop: 24, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+           Motion Graphic Artist · Graphic Designer · Video Editor · 3D Artist
+         </div>
+         <p style={{ fontSize: 'clamp(1rem, 1.5vw, 1.2rem)', color: 'rgba(255,255,255,0.4)', fontWeight: 300, maxWidth: 500, margin: '24px auto 0', lineHeight: 1.6 }}>
+           A person who has a huge interest in Visual Creative.<br/>Passionate about creating imaginative visual and motion.
+         </p>
+      </div>
+
+      <FloatingPill label="Motion Graphics" top="25%" left="15%" delay="0s" />
+      <FloatingPill label="3D Artist" top="30%" right="15%" delay="1s" />
+      <FloatingPill label="Video Editor" bottom="25%" left="20%" delay="2s" />
+      <FloatingPill label="VFX Compositing" bottom="30%" right="20%" delay="1.5s" />
+    </section>
+  )
+}
+
+function Home({ goToProjects }) {
+  return (
+    <div>
+      <div style={{ height: '100vh', scrollSnapAlign: 'start' }}><Hero /></div>
+      <CinemaReel mode="sticky" slides={HOME_SLIDES} withModal={false} onExplore={s => goToProjects(s.type)} />
+      <div style={{ scrollSnapAlign: 'start' }}><Footer /></div>
+    </div>
+  );
+}
+
+function MiniFooter() {
+  return (
+    <div style={{ width: '100%', padding: '24px 40px', fontSize: 11, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', marginTop: 'auto', display: 'flex', justifyContent: 'flex-start' }}>
+      © afitsrdj 2026
+    </div>
+  );
+}
+
+function FadeIn({ children, delay = 0 }) {
+  const ref = useRef();
+  useEffect(() => {
+    const observer = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { e.target.style.opacity = 1; e.target.style.transform = 'translateY(0)'; }
+    }, { threshold: 0.1 });
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+  return <div ref={ref} style={{ opacity: 0, transform: 'translateY(40px)', transition: `all 0.8s cubic-bezier(0.22,1,0.36,1) ${delay}ms` }}>{children}</div>;
+}
+
+function ExperienceItem({ year, title, company, type }) {
+  return (
+    <div style={{ display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '24px 0', gap: 24, flexWrap: 'wrap' }}>
+       <div style={{ width: 150, fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', opacity: 0.5, paddingTop: 4 }}>{year}</div>
+       <div style={{ flex: 1, minWidth: 200 }}>
+          <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 6 }}>{title}</div>
+          <div style={{ fontSize: 14, opacity: 0.7 }}>{company}</div>
+       </div>
+       <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.1em', background: 'rgba(255,255,255,0.05)', padding: '6px 16px', borderRadius: 999, height: 'fit-content' }}>
+          {type}
+       </div>
+    </div>
+  )
+}
+
+function ToolPill({ label }) {
+  return <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', padding: '12px 24px', borderRadius: 999, fontSize: 13, fontWeight: 600, letterSpacing: '0.05em' }}>{label}</div>;
+}
+
+function About() {
+  return (
+    <div style={{ minHeight: '100vh', paddingTop: 140, display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#0a0908' }}>
+      <div style={{ width: 'min(900px, 90%)', position: 'relative', flex: 1, paddingBottom: 100 }}>
+         
+         <FadeIn delay={100}>
+           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 60, alignItems: 'start', marginBottom: 120 }}>
+              <div style={{ paddingRight: 20 }}>
+                <h1 style={{ fontSize: 'clamp(3rem, 5vw, 4.5rem)', fontWeight: 800, marginBottom: 30, letterSpacing: '-0.03em', lineHeight: 1.1 }}>Hola!<br/>I'm Afit.</h1>
+                <div style={{ fontSize: '1.15rem', lineHeight: 1.8, color: 'rgba(255,255,255,0.8)', display: 'flex', flexDirection: 'column', gap: 20 }}>
+                   <p>I’m a visual designer and animator based in Jakarta, Indonesia. I recently graduated with a degree in Animation from Politeknik Negeri Media Kreatif.</p>
+                   <p>My expertise lies in motion graphics, 3D art, and visual effects compositing. I strongly believe that the success of any project is rooted in great collaboration, open communication, and simply being kind.</p>
+                </div>
+              </div>
+              <div style={{ width: '100%', aspectRatio: '4/5', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                 <span style={{ opacity: 0.3, letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: 10, fontWeight: 700, padding: 20, textAlign: 'center' }}>PHOTO PLACEHOLDER</span>
+              </div>
+           </div>
+         </FadeIn>
+
+         <FadeIn delay={100}>
+           <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20, letterSpacing: '-0.02em', color: '#fff' }}>Experience</h2>
+           <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', marginBottom: 80 }}>
+              <ExperienceItem year="Mar 2025 - Present" title="Creative Designer" company="PT. Sahabat Mikro Fintek" type="Full-Time" />
+              <ExperienceItem year="Current" title="Video Editor & Motion Designer" company="Freelance" type="Freelance" />
+              <ExperienceItem year="Jul - Oct 2024" title="Motion Graphic Designer" company="Dibilabs.Id" type="Part-Time" />
+              <ExperienceItem year="Feb - Jul 2024" title="Video Animator" company="PT. Telekomunikasi Indonesia" type="Internship" />
+              <ExperienceItem year="May - Dec 2023" title="Graphic Designer" company="AXA Mandiri Financial Services" type="Internship" />
+           </div>
+         </FadeIn>
+
+         <FadeIn delay={100}>
+           <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20, letterSpacing: '-0.02em', color: '#fff' }}>Education</h2>
+           <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', marginBottom: 80 }}>
+              <ExperienceItem year="2021 - 2025" title="Animation Major" company="Politeknik Negeri Media Kreatif" type="Degree" />
+           </div>
+         </FadeIn>
+
+         <FadeIn delay={100}>
+           <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 30, letterSpacing: '-0.02em', color: '#fff' }}>Tools & Software</h2>
+           <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+              <ToolPill label="After Effects" />
+              <ToolPill label="Premiere Pro" />
+              <ToolPill label="Cinema 4D" />
+              <ToolPill label="Blender 3D" />
+              <ToolPill label="Autodesk Maya" />
+              <ToolPill label="Davinci Resolve" />
+              <ToolPill label="Photoshop" />
+              <ToolPill label="Illustrator" />
+           </div>
+         </FadeIn>
+      </div>
+      <MiniFooter />
+    </div>
+  )
+}
+
+function ContactCard({ icon, value, link }) {
+  return (
+    <a href={link} target="_blank" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px', width: 220, height: 200, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 32, textDecoration: 'none', transition: 'all 0.3s' }} onMouseEnter={e => {e.currentTarget.style.background='rgba(255,255,255,0.05)'; e.currentTarget.style.transform='translateY(-5px)'; e.currentTarget.firstChild.style.color='#fff';}} onMouseLeave={e => {e.currentTarget.style.background='rgba(255,255,255,0.02)'; e.currentTarget.style.transform='translateY(0)'; e.currentTarget.firstChild.style.color='rgba(255,255,255,0.4)';}}>
+      <div style={{ marginBottom: 20, color: 'rgba(255,255,255,0.4)', transition: 'color 0.3s' }}>{icon}</div>
+      <span style={{ fontSize: 14, fontWeight: 600, color: '#fff', textAlign: 'center' }}>{value}</span>
+    </a>
+  )
+}
+
+function Contact() {
+  return (
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#0a0908' }}>
+       <div style={{ flex: 1, paddingTop: 120, paddingBottom: 100, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+         <h1 style={{ fontSize: 'clamp(4rem, 8vw, 7rem)', fontWeight: 800, letterSpacing: '-0.04em', marginBottom: 20 }}>Hit me up!</h1>
+         <p style={{ fontSize: '1.2rem', color: 'rgba(255,255,255,0.5)', marginBottom: 80 }}>Ready to start your next project? Let's connect below.</p>
+         <div style={{ display: 'flex', gap: 30, flexWrap: 'wrap', justifyContent: 'center', maxWidth: 1000 }}>
+            <ContactCard icon={Icons.email} value="afit14.as@gmail.com" link="mailto:afit14.as@gmail.com" />
+            <ContactCard icon={Icons.linkedin} value="Afit Suradiradja" link="https://www.linkedin.com/in/afit-suradiradja/" />
+            <ContactCard icon={Icons.instagram} value="@afitsrdj" link="https://www.instagram.com/afitsrdj" />
+            <ContactCard icon={Icons.youtube} value="Afit Studio" link="https://youtube.com" />
+         </div>
+       </div>
+       <MiniFooter />
+    </div>
+  )
+}
+
+function FilterItem({ active, onClick, label, icon }) {
+  return (
+    <div 
+      onClick={onClick}
+      style={{ 
+        fontSize: "clamp(14px, 2vw, 20px)", whiteSpace: "nowrap", fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 14,
+        opacity: active ? 1 : 0.3, transform: active ? 'translateX(10px)' : 'translateX(0px)',
+        transition: 'all 0.3s ease', letterSpacing: '-0.02em'
+      }}
+      onMouseEnter={e => e.currentTarget.style.opacity = 1}
+      onMouseLeave={e => { if(!active) e.currentTarget.style.opacity = 0.3 }}
+    >
+      {icon} {label}
+    </div>
+  )
+}
+
+function Projects({ filter, setFilter }) {
+  const filtered = PORTFOLIO_ITEMS.filter(p => filter === 'all' || p.type === filter);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    const t = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(t);
+  }, [filter]);
+
+  return (
+    <div className="proj-wrapper" style={{ display: 'flex', height: '100vh', width: '100%', background: '#0a0908' }}>
+      <div className="proj-sidebar" style={{ display: 'flex', gap: 24, zIndex: 10 }}>
+         <h2 style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.2em', opacity: 0.4, marginBottom: 10 }}>FILTER PROJECTS</h2>
+         <FilterItem active={filter==='all'} onClick={()=>setFilter('all')} label="All Work" icon={Icons.grid} />
+         <FilterItem active={filter==='vfx'} onClick={()=>setFilter('vfx')} label="VFX" icon={Icons.vfx} />
+         <FilterItem active={filter==='3d'} onClick={()=>setFilter('3d')} label="3D Art" icon={Icons.art3d} />
+         <FilterItem active={filter==='motion'} onClick={()=>setFilter('motion')} label="Motion" icon={Icons.motion} />
+      </div>
+      <div style={{ flex: 1, position: 'relative', height: '100vh' }}>
+         {loading && (
+           <div style={{ position: 'absolute', inset: 0, zIndex: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0908' }}>
+             <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.4em', color: 'rgba(255,255,255,0.5)', animation: 'pulse 1.5s infinite' }}>
+               LOADING REEL...
+             </div>
+           </div>
+         )}
+         <div style={{ opacity: loading ? 0 : 1, transition: 'opacity 0.6s ease', height: '100%', width: '100%' }}>
+            <CinemaReel key={filter} mode="interactive" slides={filtered} withModal={true} />
+         </div>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [route, setRoute] = useState('home');
+  const [filter, setFilter] = useState('all');
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [route]);
+
+  const goToProjects = (type) => {
+    setFilter(type);
+    setRoute('projects');
+  };
+
+  return (
+    <>
+      <Navbar route={route} setRoute={setRoute} />
+      {route === 'home' && <Home goToProjects={goToProjects} />}
+      {route === 'projects' && <Projects filter={filter} setFilter={setFilter} />}
+      {route === 'about' && <About />}
+      {route === 'contact' && <Contact />}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
