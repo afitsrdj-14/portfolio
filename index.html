@@ -37,11 +37,20 @@
   .proj-sidebar { width: 340px; flex-direction: column; height: 100vh; border-right: 1px solid rgba(255,255,255,0.05); padding: 120px 40px 40px; }
   .proj-wrapper { flex-direction: row; }
   .reel-slide { height: 80%; margin-bottom: 5%; }
+  
+  .nav-links { display: flex; gap: 28px; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  .nav-hamburger { display: none; background: none; border: none; color: white; cursor: pointer; padding: 4px; }
+  .mobile-menu { display: none; }
+  
   @media (max-width: 800px) {
     .proj-sidebar { width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 100px 20px 20px !important; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center; }
     .proj-sidebar > h2 { display: none; }
     .proj-wrapper { flex-direction: column !important; }
     .reel-slide { height: auto !important; aspect-ratio: 4/3; margin-bottom: 40px !important; }
+    
+    .nav-links { display: none; }
+    .nav-hamburger { display: block; }
+    .mobile-menu.open { display: flex; flex-direction: column; position: fixed; inset: 0; background: rgba(10,9,8,0.98); backdrop-filter: blur(20px); z-index: 90; padding: 120px 40px; gap: 40px; font-size: 24px; font-weight: 700; align-items: center; justify-content: center; text-transform: uppercase; letter-spacing: 0.1em; }
   }
 </style>
 </head>
@@ -59,12 +68,26 @@ const HOME_SLIDES = [
 ];
 
 const PORTFOLIO_ITEMS = [
-  { id: "v1", type: "vfx", eyebrow: "COMPOSITING · 2024", category: "VFX", title: "NEON TEARS", year: "2024", author: "Afit Suradiradja", gradient: "linear-gradient(135deg,#0d0720 0%,#16213e 45%,#1a3a5c 80%,#0a1628 100%)", desc: "A cyberpunk short film showcasing advanced compositing and set extensions.", stats: { software: "Nuke", render: "Mantra", runtime: "02:15" } },
-  { id: "v2", type: "vfx", eyebrow: "CLEANUP · 2023", category: "VFX", title: "INVISIBLE FIXES", year: "2023", author: "Afit Suradiradja", gradient: "linear-gradient(140deg,#04080c 0%,#0a1628 52%,#152232 82%,#0c1820 100%)", desc: "Showcase of invisible wire removals and complex rig cleanups.", stats: { software: "After Effects", render: "-", runtime: "03:00" } },
-  { id: "d1", type: "3d", eyebrow: "3D ART · 2024", category: "3D", title: "ABSTRACT SPHERES", year: "2024", author: "Afit Suradiradja", gradient: "linear-gradient(160deg,#0a1a0d 0%,#1b4332 45%,#2d6a4f 80%,#081c15 100%)", desc: "Exploration of procedural textures, subsurface scattering, and lighting.", stats: { software: "Cinema 4D", render: "Octane", runtime: "01:10" } },
-  { id: "d2", type: "3d", eyebrow: "PRODUCT · 2023", category: "3D", title: "TECH REVEAL", year: "2023", author: "Afit Suradiradja", gradient: "linear-gradient(150deg,#1a0000 0%,#4a0800 42%,#7a2000 72%,#2d0a0a 100%)", desc: "A sleek product reveal animation focusing on macro details.", stats: { software: "Blender", render: "Cycles", runtime: "01:30" } },
-  { id: "m1", type: "motion", eyebrow: "ANIMATION · 2024", category: "MOTION", title: "KINETIC FLOW", year: "2024", author: "Afit Suradiradja", gradient: "linear-gradient(120deg,#1c0800 0%,#3d1a00 45%,#6b3a2a 80%,#2c1408 100%)", desc: "Fluid motion graphics driven by heavy bass music.", stats: { software: "After Effects", render: "Native", runtime: "00:45" } },
-  { id: "m2", type: "motion", eyebrow: "BRANDING · 2023", category: "MOTION", title: "BRAND IDENT", year: "2023", author: "Afit Suradiradja", gradient: "linear-gradient(130deg,#080e1e 0%,#192540 48%,#2c4a6e 78%,#101e34 100%)", desc: "Dynamic typography and shape layers for an upcoming festival.", stats: { software: "After Effects", render: "Native", runtime: "00:15" } }
+  { id: "skor-kredit-ami", type: "motion", eyebrow: "SAMIR · 2026", category: "MOTION", title: "Skor Kredit AMI", year: "2026", author: "Afit Suradiradja", img: "https://framerusercontent.com/images/0WpiRPcxuZt3PwSRdawkSG1iDQ.jpg", desc: "A creative project for SAMIR." },
+  { id: "videotron-samir", type: "motion", eyebrow: "SAMIR · 2026", category: "MOTION", title: "Videotron SAMIR", year: "2026", author: "Afit Suradiradja", img: "https://framerusercontent.com/images/0oKYWHvzgXRpteR8y0rNk0S2r4.jpg", desc: "Videotron campaign for SAMIR." },
+  { id: "motion-reel", type: "motion", eyebrow: "PERSONAL · 2025", category: "MOTION", title: "Motion Reel", year: "2025", author: "Afit Suradiradja", img: "https://framerusercontent.com/images/QlHF5Lp9xONQXIuix0cZeV1bQ.jpg", desc: "Personal motion graphics showreel." },
+  { id: "catjipiti", type: "motion", eyebrow: "AXA MANDIRI · 2023", category: "MOTION", title: "Catjipiti AXA Mandiri", year: "2023", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/CbkkKnTXQZc7I359a6NR4Be2aRo.mp4", desc: "Social media feeds design and motion for AXA Mandiri." },
+  { id: "djavu", type: "motion", eyebrow: "PERSONAL · 2024", category: "MOTION", title: "DJAVU Logo Motion", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/jpCkaZu8r5RzCXoYngvhO8OBOU.mp4", desc: "Logo motion design for DJAVU Creative." },
+  { id: "hang-tuah", type: "3d", eyebrow: "COLLEGE · 2025", category: "3D", title: "Hang Tuah & Hang Jebat", year: "2025", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/D2ClrMCVzMAvCXNHR3Go7obANjQ.mp4", desc: "Short 2D/3D animation project for Polimedia." },
+  { id: "rigid-body", type: "3d", eyebrow: "COLLEGE · 2024", category: "3D", title: "Rigid Body Sim", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/RKclWjZkdQRRQiJKSM5CPFZZOMM.mp4", desc: "Rigid body simulation and texturing in Autodesk Maya." },
+  { id: "windmill", type: "3d", eyebrow: "PERSONAL · 2024", category: "3D", title: "Windmill", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/s1FKfEjlCpWgZfPid5Qw6KaY.mp4", desc: "3D windmill artwork." },
+  { id: "adjuice", type: "motion", eyebrow: "FREELANCE · 2024", category: "MOTION", title: "Adjuice Social Media", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/UyMTkzhIYR6KOcZL4WauavdM940.mp4", desc: "Social media motion graphics for Adjuice." },
+  { id: "videolearning", type: "motion", eyebrow: "TELKOM · 2024", category: "MOTION", title: "Video Learning", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/OML9YKq80RWEamXPQDaYw2GfTss.mp4", desc: "Video learning materials for Telkom CorpU." },
+  { id: "gizzi-susu", type: "motion", eyebrow: "DIBILABS · 2024", category: "MOTION", title: "Motion Gizzi", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/yQS73UK6MexGaktmfEkqPohP4X8.mp4", desc: "Motion graphics for Gizzi UHT." },
+  { id: "hut-ri", type: "vfx", eyebrow: "FREELANCE · 2024", category: "VFX", title: "Parade HUT RI", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/qfW0xlf9we7HDXhp0XjWPuBa3E.mp4", desc: "Video editing for Independence Day parade." },
+  { id: "gizzi-anak", type: "motion", eyebrow: "DIBILABS · 2024", category: "MOTION", title: "Gizzi Hari Anak", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/hKWV4l04uiPTAU18EZDMFFtUA.mp4", desc: "Motion graphics for Gizzi National Children's Day." },
+  { id: "3d-showreel", type: "3d", eyebrow: "PERSONAL · 2024", category: "3D", title: "3D Showreel", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/7SejrHjAR0gemdXw1c2EQ2NujQ.mp4", desc: "Compilation of my 3D artwork." },
+  { id: "gita23rd", type: "motion", eyebrow: "FREELANCE · 2024", category: "MOTION", title: "Gita 23rd Birthday", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/XqAmC8E5WacMTftstK5DNlG2HP8.mp4", desc: "Fan video for JKT48 member." },
+  { id: "aftermovie", type: "vfx", eyebrow: "PERSONAL · 2024", category: "VFX", title: "Aftermovie Parade", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/hGTnvE3DoTPNnjBMdtAmdiaToA4.mp4", desc: "Documentation editing for Parade Otak Kanan." },
+  { id: "railways", type: "vfx", eyebrow: "PERSONAL · 2023", category: "VFX", title: "The Railways", year: "2023", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/cwES02aAV0MPRlhO1y2bXF5rs.mp4", desc: "Color grading experiment with Davinci Resolve." },
+  { id: "axa-tm", type: "motion", eyebrow: "AXA MANDIRI · 2023", category: "MOTION", title: "AXA Motivational", year: "2023", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/NVedGjtN0Jug9NBkDKGaAp4YEs.mp4", desc: "Opening video for telemarketing motivational event." },
+  { id: "showreel-edit", type: "motion", eyebrow: "PERSONAL · 2023", category: "MOTION", title: "Showreel 2023", year: "2023", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/QkC1RcqN2rogPpOggxw7rHhwFUA.mp4", desc: "Video editing and motion graphics showreel." },
+  { id: "bts-photo", type: "vfx", eyebrow: "PERSONAL · 2022", category: "VFX", title: "BTS Photoshoot", year: "2022", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/QRcUQSCGpzMaL1IapHhJ7cU44.mp4", desc: "Behind the scenes photoshoot documentation." }
 ];
 
 const Icons = {
@@ -256,8 +279,13 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
           return (
             <div key={slide.id} className="reel-slide" ref={el => outerRefs.current[i] = el} style={{ position: "relative", width: "100%", perspective: "2000px", opacity: 0 }}>
               <div style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden", borderRadius: 40, transformOrigin: "0% 50%", transformStyle: "preserve-3d", transform: isOpen ? "rotateY(12deg)" : "rotateY(0deg)", transition: "all 700ms cubic-bezier(0.22,1,0.36,1)" }}>
-                <div ref={el => imgRefs.current[i] = el} style={{ position: "absolute", top: "50%", left: "50%", width: "100vw", height: "120dvh", marginTop: "-60dvh", marginLeft: "-50vw", willChange: "transform", background: slide.gradient }}>
-                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg,rgba(0,0,0,0.5) 0%,rgba(0,0,0,0.05) 25%,rgba(0,0,0,0.05) 65%,rgba(0,0,0,0.65) 100%)" }} />
+                <div ref={el => imgRefs.current[i] = el} style={{ position: "absolute", top: "50%", left: "50%", width: "100vw", height: "120dvh", marginTop: "-60dvh", marginLeft: "-50vw", willChange: "transform", background: slide.gradient || "#050505" }}>
+                  {slide.vid ? (
+                    <video src={slide.vid} autoPlay loop muted playsInline style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.8 }} />
+                  ) : slide.img ? (
+                    <img src={slide.img} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.8 }} />
+                  ) : null}
+                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg,rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.1) 25%,rgba(0,0,0,0.1) 65%,rgba(0,0,0,0.85) 100%)" }} />
                   <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", fontSize: "clamp(120px,25vw,280px)", fontWeight: 800, color: "rgba(255,255,255,0.03)", letterSpacing: "-0.05em", lineHeight: 1 }}>{String(i + 1).padStart(2, "0")}</div>
                 </div>
                 <div ref={el => contentRefs.current[i] = el} style={{ position: "absolute", inset: 0, willChange: "opacity,filter,transform", opacity: 0, filter: "blur(16px)" }}>
@@ -327,24 +355,44 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
 /* ─── Page Components ───────────────────────────────────────────── */
 function Navbar({ route, setRoute }) {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  const handleNav = (r) => {
+    setRoute(r);
+    setMenuOpen(false);
+  };
+
   return (
-    <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', pointerEvents: 'none', zIndex: 100, display: 'flex', justifyContent: 'center', transition: 'padding 0.4s ease', paddingTop: scrolled ? 16 : 32 }}>
-      <nav style={{ pointerEvents: 'auto', padding: '16px 36px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: scrolled ? 'rgba(15,15,15,0.85)' : 'rgba(15,15,15,0.4)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 999, transition: 'all 0.4s cubic-bezier(0.22,1,0.36,1)', gap: 50, boxShadow: scrolled ? '0 10px 40px -10px rgba(0,0,0,0.5)' : 'none' }}>
-        <div onClick={() => setRoute('home')} style={{ fontSize: 20, fontWeight: 800, cursor: 'pointer', letterSpacing: '-0.03em' }}>afitsrdj.</div>
-        <div style={{ display: 'flex', gap: 28, fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-           <span onClick={() => setRoute('home')} style={{ cursor: 'pointer', opacity: route === 'home' ? 1 : 0.5, transition: 'opacity 0.2s' }}>Home</span>
-           <span onClick={() => setRoute('projects')} style={{ cursor: 'pointer', opacity: route === 'projects' ? 1 : 0.5, transition: 'opacity 0.2s' }}>Projects</span>
-           <span onClick={() => setRoute('about')} style={{ cursor: 'pointer', opacity: route === 'about' ? 1 : 0.5, transition: 'opacity 0.2s' }}>About</span>
-           <span onClick={() => setRoute('contact')} style={{ cursor: 'pointer', opacity: route === 'contact' ? 1 : 0.5, transition: 'opacity 0.2s' }}>Contact</span>
-        </div>
-      </nav>
-    </div>
+    <>
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', pointerEvents: 'none', zIndex: 100, display: 'flex', justifyContent: 'center', transition: 'padding 0.4s ease', paddingTop: scrolled ? 16 : 32 }}>
+        <nav style={{ pointerEvents: 'auto', padding: '16px 36px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: scrolled ? 'rgba(15,15,15,0.85)' : 'rgba(15,15,15,0.4)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 999, transition: 'all 0.4s cubic-bezier(0.22,1,0.36,1)', gap: 50, boxShadow: scrolled ? '0 10px 40px -10px rgba(0,0,0,0.5)' : 'none' }}>
+          <div onClick={() => handleNav('home')} style={{ fontSize: 20, fontWeight: 800, cursor: 'pointer', letterSpacing: '-0.03em' }}>afitsrdj.</div>
+          
+          <div className="nav-links">
+             <span onClick={() => handleNav('home')} style={{ cursor: 'pointer', opacity: route === 'home' ? 1 : 0.5, transition: 'opacity 0.2s' }}>Home</span>
+             <span onClick={() => handleNav('projects')} style={{ cursor: 'pointer', opacity: route === 'projects' ? 1 : 0.5, transition: 'opacity 0.2s' }}>Projects</span>
+             <span onClick={() => handleNav('about')} style={{ cursor: 'pointer', opacity: route === 'about' ? 1 : 0.5, transition: 'opacity 0.2s' }}>About</span>
+             <span onClick={() => handleNav('contact')} style={{ cursor: 'pointer', opacity: route === 'contact' ? 1 : 0.5, transition: 'opacity 0.2s' }}>Contact</span>
+          </div>
+          
+          <button className="nav-hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+        </nav>
+      </div>
+
+      <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
+         <div onClick={() => handleNav('home')} style={{ cursor: 'pointer', opacity: route === 'home' ? 1 : 0.5 }}>Home</div>
+         <div onClick={() => handleNav('projects')} style={{ cursor: 'pointer', opacity: route === 'projects' ? 1 : 0.5 }}>Projects</div>
+         <div onClick={() => handleNav('about')} style={{ cursor: 'pointer', opacity: route === 'about' ? 1 : 0.5 }}>About</div>
+         <div onClick={() => handleNav('contact')} style={{ cursor: 'pointer', opacity: route === 'contact' ? 1 : 0.5 }}>Contact</div>
+      </div>
+    </>
   );
 }
 
@@ -468,10 +516,10 @@ function About() {
       <div style={{ width: 'min(900px, 90%)', position: 'relative', flex: 1, paddingBottom: 100 }}>
          
          <FadeIn delay={100}>
-           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 60, alignItems: 'start', marginBottom: 120 }}>
-              <div style={{ paddingRight: 20 }}>
-                <h1 style={{ fontSize: 'clamp(3rem, 5vw, 4.5rem)', fontWeight: 800, marginBottom: 30, letterSpacing: '-0.03em', lineHeight: 1.1 }}>Hola!<br/>I'm Afit.</h1>
-                <div style={{ fontSize: '1.15rem', lineHeight: 1.8, color: 'rgba(255,255,255,0.8)', display: 'flex', flexDirection: 'column', gap: 20 }}>
+           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'clamp(30px, 8vw, 60px)', alignItems: 'start', marginBottom: 120 }}>
+              <div style={{ paddingRight: 0 }}>
+                <h1 style={{ fontSize: 'clamp(2.5rem, 8vw, 4.5rem)', fontWeight: 800, marginBottom: 30, letterSpacing: '-0.03em', lineHeight: 1.1 }}>Hola!<br/>I'm Afit.</h1>
+                <div style={{ fontSize: 'clamp(1rem, 3vw, 1.15rem)', lineHeight: 1.8, color: 'rgba(255,255,255,0.8)', display: 'flex', flexDirection: 'column', gap: 20 }}>
                    <p>I’m a visual designer and animator based in Jakarta, Indonesia. I recently graduated with a degree in Animation from Politeknik Negeri Media Kreatif.</p>
                    <p>My expertise lies in motion graphics, 3D art, and visual effects compositing. I strongly believe that the success of any project is rooted in great collaboration, open communication, and simply being kind.</p>
                 </div>
