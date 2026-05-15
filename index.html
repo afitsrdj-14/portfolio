@@ -54,7 +54,7 @@
     }
     .proj-sidebar > h2 { display: none; }
     .proj-wrapper { display: block !important; padding-bottom: 80px; }
-    .reel-slide { height: 60vh !important; aspect-ratio: auto !important; margin-bottom: 5vh !important; }
+    .reel-slide { height: auto !important; width: 100% !important; aspect-ratio: 1/1 !important; margin-bottom: 5vh !important; }
     .modal-panel { width: 90% !important; right: 5% !important; left: 5% !important; padding: 40px 20px !important; }
     .explore-btn-area { width: 100% !important; bottom: 0 !important; top: auto !important; height: 35% !important; align-items: flex-end !important; }
     
@@ -62,6 +62,10 @@
     .nav-hamburger { display: block; }
     .mobile-menu.open { display: flex; flex-direction: column; position: fixed; inset: 0; background: rgba(10,9,8,0.98); backdrop-filter: blur(20px); z-index: 90; padding: 120px 40px; gap: 40px; font-size: 24px; font-weight: 700; align-items: center; justify-content: center; text-transform: uppercase; letter-spacing: 0.1em; }
     .main-footer { padding: 60px 8% 100px !important; }
+    .footer-links { display: none !important; }
+    .about-photo { display: none !important; }
+    .contact-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 16px !important; padding: 0 20px; width: 100%; }
+    .contact-card { width: 100% !important; height: 160px !important; padding: 20px !important; }
   }
 </style>
 </head>
@@ -169,10 +173,16 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
   const setIdx = useCallback((next) => {
     const clampedNext = Math.max(0, Math.min(N - 1, next));
     if (clampedNext === idxR.current) return;
-    prevR.current = idxR.current; idxR.current = clampedNext;
-    tgtR.current = layR.current.topPad - clampedNext * layR.current.pitch;
-    setActiveIdx(clampedNext);
-  }, [N]);
+    if (isSticky && wrapperRef.current) {
+      const rect = wrapperRef.current.getBoundingClientRect();
+      const offset = window.scrollY + rect.top + (clampedNext * window.innerHeight);
+      window.scrollTo({ top: offset, behavior: 'smooth' });
+    } else {
+      prevR.current = idxR.current; idxR.current = clampedNext;
+      tgtR.current = layR.current.topPad - clampedNext * layR.current.pitch;
+      setActiveIdx(clampedNext);
+    }
+  }, [N, isSticky]);
 
   useEffect(() => {
     layR.current = getLay();
@@ -393,7 +403,7 @@ function Footer() {
     <footer className="main-footer" style={{ padding: '150px 10%', background: '#050404', borderTop: '1px solid rgba(255,255,255,0.05)', width: '100%', position: 'relative', zIndex: 10 }}>
       <h2 style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', fontWeight: 700, marginBottom: 20, letterSpacing: '-0.03em' }}>Let's get to know each other.</h2>
       <a href="mailto:afit14.as@gmail.com" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#fff', textDecoration: 'none', display: 'block', marginBottom: 60, fontWeight: 300, transition: 'opacity 0.3s' }}>Get in touch. →</a>
-      <div style={{ display: 'flex', gap: 30, marginBottom: 40 }}>
+      <div className="footer-links" style={{ display: 'flex', gap: 30, marginBottom: 40 }}>
         <a href="https://www.instagram.com/afitsrdj" target="_blank" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '1rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.2em' }}>Instagram</a>
         <a href="https://www.linkedin.com/in/afit-suradiradja/" target="_blank" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '1rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.2em' }}>LinkedIn</a>
         <a href="https://youtube.com" target="_blank" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '1rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.2em' }}>YouTube</a>
@@ -516,7 +526,7 @@ function About() {
                    <p>My expertise lies in motion graphics, 3D art, and visual effects compositing. I strongly believe that the success of any project is rooted in great collaboration, open communication, and simply being kind.</p>
                 </div>
               </div>
-              <div style={{ width: '100%', aspectRatio: '4/5', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div className="about-photo" style={{ width: '100%', aspectRatio: '4/5', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                  <span style={{ opacity: 0.3, letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: 10, fontWeight: 700, padding: 20, textAlign: 'center' }}>PHOTO PLACEHOLDER</span>
               </div>
            </div>
@@ -561,7 +571,7 @@ function About() {
 
 function ContactCard({ icon, value, link }) {
   return (
-    <a href={link} target="_blank" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px', width: 220, height: 200, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 32, textDecoration: 'none', transition: 'all 0.3s' }} onMouseEnter={e => {e.currentTarget.style.background='rgba(255,255,255,0.05)'; e.currentTarget.style.transform='translateY(-5px)'; e.currentTarget.firstChild.style.color='#fff';}} onMouseLeave={e => {e.currentTarget.style.background='rgba(255,255,255,0.02)'; e.currentTarget.style.transform='translateY(0)'; e.currentTarget.firstChild.style.color='rgba(255,255,255,0.4)';}}>
+    <a href={link} className="contact-card" target="_blank" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px', width: 220, height: 200, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 32, textDecoration: 'none', transition: 'all 0.3s' }} onMouseEnter={e => {e.currentTarget.style.background='rgba(255,255,255,0.05)'; e.currentTarget.style.transform='translateY(-5px)'; e.currentTarget.firstChild.style.color='#fff';}} onMouseLeave={e => {e.currentTarget.style.background='rgba(255,255,255,0.02)'; e.currentTarget.style.transform='translateY(0)'; e.currentTarget.firstChild.style.color='rgba(255,255,255,0.4)';}}>
       <div style={{ marginBottom: 20, color: 'rgba(255,255,255,0.4)', transition: 'color 0.3s' }}>{icon}</div>
       <span style={{ fontSize: 14, fontWeight: 600, color: '#fff', textAlign: 'center' }}>{value}</span>
     </a>
@@ -573,8 +583,8 @@ function Contact() {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#0a0908' }}>
        <div style={{ flex: 1, paddingTop: 120, paddingBottom: 100, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
          <h1 style={{ fontSize: 'clamp(4rem, 8vw, 7rem)', fontWeight: 800, letterSpacing: '-0.04em', marginBottom: 20 }}>Hit me up!</h1>
-         <p style={{ fontSize: '1.2rem', color: 'rgba(255,255,255,0.5)', marginBottom: 80 }}>Ready to start your next project? Let's connect below.</p>
-         <div style={{ display: 'flex', gap: 30, flexWrap: 'wrap', justifyContent: 'center', maxWidth: 1000 }}>
+         <p style={{ fontSize: '1.2rem', color: 'rgba(255,255,255,0.5)', marginBottom: 80, textAlign: 'center', padding: '0 20px' }}>Ready to start your next project? Let's connect below.</p>
+         <div className="contact-grid" style={{ display: 'flex', gap: 30, flexWrap: 'wrap', justifyContent: 'center', maxWidth: 1000 }}>
             <ContactCard icon={Icons.email} value="afit14.as@gmail.com" link="mailto:afit14.as@gmail.com" />
             <ContactCard icon={Icons.linkedin} value="Afit Suradiradja" link="https://www.linkedin.com/in/afit-suradiradja/" />
             <ContactCard icon={Icons.instagram} value="@afitsrdj" link="https://www.instagram.com/afitsrdj" />
@@ -606,6 +616,13 @@ function FilterItem({ active, onClick, label, icon }) {
 function Projects({ filter, setFilter }) {
   const filtered = PORTFOLIO_ITEMS.filter(p => filter === 'all' || p.type === filter);
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
+
+  useEffect(() => {
+    const cb = () => setIsMobile(window.innerWidth <= 800);
+    window.addEventListener('resize', cb);
+    return () => window.removeEventListener('resize', cb);
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -631,7 +648,7 @@ function Projects({ filter, setFilter }) {
            </div>
          )}
          <div style={{ opacity: loading ? 0 : 1, transition: 'opacity 0.6s ease', height: '100%', width: '100%' }}>
-            <CinemaReel key={filter} mode="interactive" slides={filtered} withModal={true} />
+            <CinemaReel key={filter} mode={isMobile ? "sticky" : "interactive"} slides={filtered} withModal={true} />
          </div>
       </div>
     </div>
