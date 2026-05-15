@@ -23,9 +23,11 @@
   ::-webkit-scrollbar { width: 0px; }
   
   @keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-15px); }
-    100% { transform: translateY(0px); }
+    0% { transform: translate(0px, 0px) rotate(0deg); }
+    25% { transform: translate(10px, -15px) rotate(4deg); }
+    50% { transform: translate(0px, -25px) rotate(-2deg); }
+    75% { transform: translate(-10px, -10px) rotate(-4deg); }
+    100% { transform: translate(0px, 0px) rotate(0deg); }
   }
   @keyframes pulse {
     0% { opacity: 0.3; }
@@ -46,7 +48,7 @@
   @media (max-width: 800px) {
     .proj-sidebar { 
       position: fixed; bottom: 0; left: 0; right: 0; 
-      height: auto; width: 100%; z-index: 100;
+      height: auto; width: 100%; z-index: 1000 !important;
       background: rgba(10,9,8,0.95); backdrop-filter: blur(20px);
       padding: 16px 20px 28px !important; border-top: 1px solid rgba(255,255,255,0.08); 
       border-bottom: none !important; border-right: none;
@@ -57,6 +59,13 @@
     .reel-slide { height: auto !important; width: 100% !important; aspect-ratio: 1/1 !important; margin-bottom: 5vh !important; }
     .modal-panel { width: 90% !important; right: 5% !important; left: 5% !important; padding: 40px 20px !important; }
     .explore-btn-area { width: 100% !important; bottom: 0 !important; top: auto !important; height: 35% !important; align-items: flex-end !important; }
+    .explore-btn-area button { padding: 10px 16px !important; font-size: 9px !important; }
+    
+    .floating-pill { font-size: 8px !important; padding: 8px 12px !important; }
+    .fp-1 { top: 12% !important; left: 4% !important; }
+    .fp-2 { top: 16% !important; right: 4% !important; }
+    .fp-3 { bottom: 12% !important; left: 4% !important; }
+    .fp-4 { bottom: 16% !important; right: 4% !important; }
     
     .nav-links { display: none; }
     .nav-hamburger { display: block; }
@@ -416,9 +425,9 @@ function Footer() {
   );
 }
 
-function FloatingPill({ label, top, left, right, bottom, delay }) {
+function FloatingPill({ label, top, left, right, bottom, delay, className = "" }) {
   return (
-    <div className="floating-pill" style={{ 
+    <div className={`floating-pill ${className}`} style={{ 
       position: 'absolute', top, left, right, bottom, animationDelay: delay,
       padding: '14px 28px', borderRadius: 999, border: '1px solid rgba(255,255,255,0.1)',
       background: 'rgba(255,255,255,0.02)', backdropFilter: 'blur(12px)',
@@ -455,10 +464,10 @@ function Hero() {
          </p>
       </div>
 
-      <FloatingPill label="Motion Graphics" top="25%" left="15%" delay="0s" />
-      <FloatingPill label="3D Artist" top="30%" right="15%" delay="1s" />
-      <FloatingPill label="Video Editor" bottom="25%" left="20%" delay="2s" />
-      <FloatingPill label="VFX Compositing" bottom="30%" right="20%" delay="1.5s" />
+      <FloatingPill className="fp-1" label="Motion Graphics" top="25%" left="15%" delay="0s" />
+      <FloatingPill className="fp-2" label="3D Artist" top="30%" right="15%" delay="1s" />
+      <FloatingPill className="fp-3" label="Video Editor" bottom="25%" left="20%" delay="2s" />
+      <FloatingPill className="fp-4" label="VFX Compositing" bottom="30%" right="20%" delay="1.5s" />
     </section>
   )
 }
