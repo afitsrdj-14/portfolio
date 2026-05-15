@@ -88,6 +88,23 @@ const { useState, useRef, useEffect, useCallback } = React;
 const HOME_SLIDES = window.HOME_SLIDES;
 const PORTFOLIO_ITEMS = window.PORTFOLIO_ITEMS;
 
+const DEFAULT_ABOUT = {
+  title: "Hola!<br/>I'm Afit.",
+  description: "I’m a visual designer and animator based in Jakarta, Indonesia. I recently graduated with a degree in Animation from Politeknik Negeri Media Kreatif.\n\nMy expertise lies in motion graphics, 3D art, and visual effects compositing. I strongly believe that the success of any project is rooted in great collaboration, open communication, and simply being kind."
+};
+
+const DEFAULT_CONTACT = {
+  title: "Hit me up!",
+  subtitle: "Ready to start your next project? Let's connect below.",
+  email: "afit14.as@gmail.com",
+  linkedin: "Afit Suradiradja",
+  linkedinUrl: "https://www.linkedin.com/in/afit-suradiradja/",
+  instagram: "@afitsrdj",
+  instagramUrl: "https://www.instagram.com/afitsrdj",
+  youtube: "Afit Suradiradja",
+  youtubeUrl: "https://youtube.com"
+};
+
 const Icons = {
   email: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>,
   linkedin: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>,
@@ -522,6 +539,8 @@ function ToolPill({ label }) {
 }
 
 function About() {
+  const data = window.ABOUT_DATA || DEFAULT_ABOUT;
+  const paragraphs = data.description.split('\n').filter(p => p.trim() !== '');
   return (
     <div style={{ minHeight: '100vh', paddingTop: 140, display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#0a0908' }}>
       <div style={{ width: 'min(900px, 90%)', position: 'relative', flex: 1, paddingBottom: 100 }}>
@@ -529,10 +548,9 @@ function About() {
          <FadeIn delay={100}>
            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'clamp(30px, 8vw, 60px)', alignItems: 'start', marginBottom: 120 }}>
               <div style={{ paddingRight: 0 }}>
-                <h1 style={{ fontSize: 'clamp(2.5rem, 8vw, 4.5rem)', fontWeight: 800, marginBottom: 30, letterSpacing: '-0.03em', lineHeight: 1.1 }}>Hola!<br/>I'm Afit.</h1>
+                <h1 style={{ fontSize: 'clamp(2.5rem, 8vw, 4.5rem)', fontWeight: 800, marginBottom: 30, letterSpacing: '-0.03em', lineHeight: 1.1 }} dangerouslySetInnerHTML={{ __html: data.title }} />
                 <div style={{ fontSize: 'clamp(1rem, 3vw, 1.15rem)', lineHeight: 1.8, color: 'rgba(255,255,255,0.8)', display: 'flex', flexDirection: 'column', gap: 20 }}>
-                   <p>I’m a visual designer and animator based in Jakarta, Indonesia. I recently graduated with a degree in Animation from Politeknik Negeri Media Kreatif.</p>
-                   <p>My expertise lies in motion graphics, 3D art, and visual effects compositing. I strongly believe that the success of any project is rooted in great collaboration, open communication, and simply being kind.</p>
+                   {paragraphs.map((p, i) => <p key={i}>{p}</p>)}
                 </div>
               </div>
               <div className="about-photo" style={{ width: '100%', aspectRatio: '4/5', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -588,16 +606,17 @@ function ContactCard({ icon, value, link }) {
 }
 
 function Contact() {
+  const data = window.CONTACT_DATA || DEFAULT_CONTACT;
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#0a0908' }}>
        <div style={{ flex: 1, paddingTop: 120, paddingBottom: 100, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-         <h1 style={{ fontSize: 'clamp(4rem, 8vw, 7rem)', fontWeight: 800, letterSpacing: '-0.04em', marginBottom: 20 }}>Hit me up!</h1>
-         <p style={{ fontSize: '1.2rem', color: 'rgba(255,255,255,0.5)', marginBottom: 80, textAlign: 'center', padding: '0 20px' }}>Ready to start your next project? Let's connect below.</p>
+         <h1 style={{ fontSize: 'clamp(4rem, 8vw, 7rem)', fontWeight: 800, letterSpacing: '-0.04em', marginBottom: 20 }}>{data.title}</h1>
+         <p style={{ fontSize: '1.2rem', color: 'rgba(255,255,255,0.5)', marginBottom: 80, textAlign: 'center', padding: '0 20px' }}>{data.subtitle}</p>
          <div className="contact-grid" style={{ display: 'flex', gap: 30, flexWrap: 'wrap', justifyContent: 'center', maxWidth: 1000 }}>
-            <ContactCard icon={Icons.email} value="afit14.as@gmail.com" link="mailto:afit14.as@gmail.com" />
-            <ContactCard icon={Icons.linkedin} value="Afit Suradiradja" link="https://www.linkedin.com/in/afit-suradiradja/" />
-            <ContactCard icon={Icons.instagram} value="@afitsrdj" link="https://www.instagram.com/afitsrdj" />
-            <ContactCard icon={Icons.youtube} value="Afit Studio" link="https://youtube.com" />
+            <ContactCard icon={Icons.email} value={data.email} link={`mailto:${data.email}`} />
+            <ContactCard icon={Icons.linkedin} value={data.linkedin} link={data.linkedinUrl} />
+            <ContactCard icon={Icons.instagram} value={data.instagram} link={data.instagramUrl} />
+            <ContactCard icon={Icons.youtube} value={data.youtube} link={data.youtubeUrl} />
          </div>
        </div>
        <MiniFooter />
@@ -668,7 +687,11 @@ function AdminPanel() {
   const [logged, setLogged] = useState(false);
   const [user, setUser] = useState('');
   const [pass, setPass] = useState('');
+  const [tab, setTab] = useState('projects');
+  
   const [items, setItems] = useState(window.PORTFOLIO_ITEMS || []);
+  const [aboutData, setAboutData] = useState(window.ABOUT_DATA || DEFAULT_ABOUT);
+  const [contactData, setContactData] = useState(window.CONTACT_DATA || DEFAULT_CONTACT);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -677,13 +700,25 @@ function AdminPanel() {
   };
 
   const handleDownload = () => {
-    const content = `// You can easily edit your project details here!\n// Make sure to wrap text in quotes and don't forget the commas.\n\nwindow.HOME_SLIDES = ${JSON.stringify(window.HOME_SLIDES, null, 2)};\n\nwindow.PORTFOLIO_ITEMS = ${JSON.stringify(items, null, 2)};\n`;
+    const content = `// You can easily edit your project details here!\n// Make sure to wrap text in quotes and don't forget the commas.\n\nwindow.ABOUT_DATA = ${JSON.stringify(aboutData, null, 2)};\n\nwindow.CONTACT_DATA = ${JSON.stringify(contactData, null, 2)};\n\nwindow.HOME_SLIDES = ${JSON.stringify(window.HOME_SLIDES, null, 2)};\n\nwindow.PORTFOLIO_ITEMS = ${JSON.stringify(items, null, 2)};\n`;
     const blob = new Blob([content], { type: 'text/javascript' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = 'data.js';
     a.click();
+  };
+
+  const addProject = () => {
+    setItems([{ id: 'new-project', type: 'motion', eyebrow: 'NEW CLIENT', category: 'MOTION', title: 'New Project', year: '2026', role: 'Role', img: '', vid: '', desc: '', youtube: '' }, ...items]);
+  };
+
+  const deleteProject = (idx) => {
+    if (window.confirm("Are you sure you want to delete this project?")) {
+      const n = [...items];
+      n.splice(idx, 1);
+      setItems(n);
+    }
   };
 
   if (!logged) {
@@ -710,37 +745,121 @@ function AdminPanel() {
             Download data.js
          </button>
        </div>
-       <p style={{ color: 'rgba(255,255,255,0.5)', marginBottom: 40, lineHeight: 1.6 }}>Edit your projects below. When finished, click the green download button. <br/>A new <b>data.js</b> file will be downloaded. Move it into your portfolio folder (replacing the old one), and push to GitHub!</p>
+       <p style={{ color: 'rgba(255,255,255,0.5)', marginBottom: 40, lineHeight: 1.6 }}>Edit your projects and pages below. When finished, click the green download button. <br/>A new <b>data.js</b> file will be downloaded. Move it into your portfolio folder (replacing the old one), and push to GitHub!</p>
        
-       <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-         {items.map((item, idx) => (
-           <div key={idx} style={{ background: 'rgba(255,255,255,0.02)', padding: 24, borderRadius: 16, border: '1px solid rgba(255,255,255,0.05)' }}>
-             <h3 style={{ marginBottom: 20, fontSize: 18, fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: 10 }}>Project: {item.title}</h3>
-             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16 }}>
+       <div style={{ display: 'flex', gap: 10, marginBottom: 30, borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: 10 }}>
+         <button onClick={()=>setTab('projects')} style={{ background: tab==='projects' ? 'rgba(255,255,255,0.1)' : 'transparent', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}>Projects</button>
+         <button onClick={()=>setTab('about')} style={{ background: tab==='about' ? 'rgba(255,255,255,0.1)' : 'transparent', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}>About Page</button>
+         <button onClick={()=>setTab('contact')} style={{ background: tab==='contact' ? 'rgba(255,255,255,0.1)' : 'transparent', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}>Contact Page</button>
+       </div>
+
+       {tab === 'projects' && (
+         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+           <button onClick={addProject} style={{ padding: '16px', background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px dashed rgba(255,255,255,0.2)', borderRadius: 16, fontWeight: 700, cursor: 'pointer', fontSize: 16 }}>+ ADD NEW PROJECT</button>
+           {items.map((item, idx) => (
+             <div key={idx} style={{ background: 'rgba(255,255,255,0.02)', padding: 24, borderRadius: 16, border: '1px solid rgba(255,255,255,0.05)' }}>
+               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: 10 }}>
+                 <h3 style={{ fontSize: 18, fontWeight: 600 }}>Project: {item.title || "Untitled"}</h3>
+                 <button onClick={() => deleteProject(idx)} style={{ background: 'rgba(255,0,0,0.1)', color: '#ff4444', border: 'none', padding: '6px 12px', borderRadius: 6, fontWeight: 700, cursor: 'pointer' }}>Delete</button>
+               </div>
+               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16 }}>
+                 <div>
+                   <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Title</label>
+                   <input value={item.title} onChange={e => { const n = [...items]; n[idx].title = e.target.value; setItems(n); }} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+                 </div>
+                 <div>
+                   <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Role</label>
+                   <input value={item.role} onChange={e => { const n = [...items]; n[idx].role = e.target.value; setItems(n); }} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+                 </div>
+                 <div>
+                   <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Client / Top Right Text</label>
+                   <input value={item.eyebrow} onChange={e => { const n = [...items]; n[idx].eyebrow = e.target.value; setItems(n); }} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+                 </div>
+                 <div>
+                   <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Filter Category (motion, 3d, vfx)</label>
+                   <input value={item.type} onChange={e => { const n = [...items]; n[idx].type = e.target.value; setItems(n); }} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+                 </div>
+                 <div>
+                   <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Video Asset URL (.mp4)</label>
+                   <input value={item.vid || ''} onChange={e => { const n = [...items]; n[idx].vid = e.target.value; setItems(n); }} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+                 </div>
+                 <div>
+                   <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>YouTube Link (Optional)</label>
+                   <input value={item.youtube || ''} onChange={e => { const n = [...items]; n[idx].youtube = e.target.value; setItems(n); }} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+                 </div>
+                 <div style={{ gridColumn: '1 / -1' }}>
+                   <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Description</label>
+                   <textarea value={item.desc} onChange={e => { const n = [...items]; n[idx].desc = e.target.value; setItems(n); }} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none', minHeight: 80, fontFamily: 'inherit' }} />
+                 </div>
+               </div>
+             </div>
+           ))}
+         </div>
+       )}
+
+       {tab === 'about' && (
+         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+           <div style={{ background: 'rgba(255,255,255,0.02)', padding: 24, borderRadius: 16, border: '1px solid rgba(255,255,255,0.05)' }}>
+             <h3 style={{ marginBottom: 20, fontSize: 18, fontWeight: 600 }}>Edit About Page</h3>
+             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                <div>
-                 <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Title</label>
-                 <input value={item.title} onChange={e => { const n = [...items]; n[idx].title = e.target.value; setItems(n); }} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+                 <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Title (supports &lt;br/&gt;)</label>
+                 <input value={aboutData.title} onChange={e => setAboutData({...aboutData, title: e.target.value})} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
                </div>
                <div>
-                 <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Role</label>
-                 <input value={item.role} onChange={e => { const n = [...items]; n[idx].role = e.target.value; setItems(n); }} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
-               </div>
-               <div>
-                 <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Client / Top Right Text</label>
-                 <input value={item.eyebrow} onChange={e => { const n = [...items]; n[idx].eyebrow = e.target.value; setItems(n); }} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
-               </div>
-               <div>
-                 <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>YouTube Link (Optional)</label>
-                 <input value={item.youtube || ''} onChange={e => { const n = [...items]; n[idx].youtube = e.target.value; setItems(n); }} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
-               </div>
-               <div style={{ gridColumn: '1 / -1' }}>
-                 <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Description</label>
-                 <textarea value={item.desc} onChange={e => { const n = [...items]; n[idx].desc = e.target.value; setItems(n); }} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none', minHeight: 80, fontFamily: 'inherit' }} />
+                 <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Description (use Enter for new paragraphs)</label>
+                 <textarea value={aboutData.description} onChange={e => setAboutData({...aboutData, description: e.target.value})} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none', minHeight: 200, fontFamily: 'inherit' }} />
                </div>
              </div>
            </div>
-         ))}
-       </div>
+         </div>
+       )}
+
+       {tab === 'contact' && (
+         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+           <div style={{ background: 'rgba(255,255,255,0.02)', padding: 24, borderRadius: 16, border: '1px solid rgba(255,255,255,0.05)' }}>
+             <h3 style={{ marginBottom: 20, fontSize: 18, fontWeight: 600 }}>Edit Contact Page</h3>
+             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16 }}>
+               <div>
+                 <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Title</label>
+                 <input value={contactData.title} onChange={e => setContactData({...contactData, title: e.target.value})} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+               </div>
+               <div>
+                 <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Subtitle</label>
+                 <input value={contactData.subtitle} onChange={e => setContactData({...contactData, subtitle: e.target.value})} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+               </div>
+               <div>
+                 <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Email</label>
+                 <input value={contactData.email} onChange={e => setContactData({...contactData, email: e.target.value})} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+               </div>
+               <div>
+                 <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>LinkedIn Name</label>
+                 <input value={contactData.linkedin} onChange={e => setContactData({...contactData, linkedin: e.target.value})} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+               </div>
+               <div>
+                 <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>LinkedIn URL</label>
+                 <input value={contactData.linkedinUrl} onChange={e => setContactData({...contactData, linkedinUrl: e.target.value})} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+               </div>
+               <div>
+                 <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Instagram Handle</label>
+                 <input value={contactData.instagram} onChange={e => setContactData({...contactData, instagram: e.target.value})} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+               </div>
+               <div>
+                 <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Instagram URL</label>
+                 <input value={contactData.instagramUrl} onChange={e => setContactData({...contactData, instagramUrl: e.target.value})} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+               </div>
+               <div>
+                 <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>YouTube Name</label>
+                 <input value={contactData.youtube} onChange={e => setContactData({...contactData, youtube: e.target.value})} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+               </div>
+               <div>
+                 <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>YouTube URL</label>
+                 <input value={contactData.youtubeUrl} onChange={e => setContactData({...contactData, youtubeUrl: e.target.value})} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+               </div>
+             </div>
+           </div>
+         </div>
+       )}
     </div>
   );
 }
