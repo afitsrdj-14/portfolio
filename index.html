@@ -46,7 +46,9 @@
     .proj-sidebar { width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 100px 20px 20px !important; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center; }
     .proj-sidebar > h2 { display: none; }
     .proj-wrapper { flex-direction: column !important; }
-    .reel-slide { height: auto !important; aspect-ratio: 4/3; margin-bottom: 40px !important; }
+    .reel-slide { height: 60vh !important; aspect-ratio: auto !important; margin-bottom: 10vh !important; }
+    .modal-panel { width: 90% !important; right: 5% !important; left: 5% !important; padding: 40px 20px !important; }
+    .explore-btn-area { width: 100% !important; bottom: 0 !important; top: auto !important; height: 40% !important; align-items: flex-end !important; }
     
     .nav-links { display: none; }
     .nav-hamburger { display: block; }
@@ -68,26 +70,26 @@ const HOME_SLIDES = [
 ];
 
 const PORTFOLIO_ITEMS = [
-  { id: "skor-kredit-ami", type: "motion", eyebrow: "SAMIR · 2026", category: "MOTION", title: "Skor Kredit AMI", year: "2026", author: "Afit Suradiradja", img: "https://framerusercontent.com/images/0WpiRPcxuZt3PwSRdawkSG1iDQ.jpg", desc: "A creative project for SAMIR." },
-  { id: "videotron-samir", type: "motion", eyebrow: "SAMIR · 2026", category: "MOTION", title: "Videotron SAMIR", year: "2026", author: "Afit Suradiradja", img: "https://framerusercontent.com/images/0oKYWHvzgXRpteR8y0rNk0S2r4.jpg", desc: "Videotron campaign for SAMIR." },
-  { id: "motion-reel", type: "motion", eyebrow: "PERSONAL · 2025", category: "MOTION", title: "Motion Reel", year: "2025", author: "Afit Suradiradja", img: "https://framerusercontent.com/images/QlHF5Lp9xONQXIuix0cZeV1bQ.jpg", desc: "Personal motion graphics showreel." },
+  { id: "skor-kredit-ami", type: "motion", eyebrow: "SAMIR · 2026", category: "MOTION", title: "Skor Kredit AMI", year: "2026", author: "Afit Suradiradja", img: "https://framerusercontent.com/images/0WpiRPcxuZt3PwSRdawkSG1iDQ.jpg", desc: "A creative project for SAMIR.", youtube: "https://youtu.be/RtNPeFRNIqc" },
+  { id: "videotron-samir", type: "motion", eyebrow: "SAMIR · 2026", category: "MOTION", title: "Videotron SAMIR", year: "2026", author: "Afit Suradiradja", img: "https://framerusercontent.com/images/0oKYWHvzgXRpteR8y0rNk0S2r4.jpg", desc: "Videotron campaign for SAMIR.", youtube: "https://youtu.be/xPB954pmRFw" },
+  { id: "motion-reel", type: "motion", eyebrow: "PERSONAL · 2025", category: "MOTION", title: "Motion Reel", year: "2025", author: "Afit Suradiradja", img: "https://framerusercontent.com/images/QlHF5Lp9xONQXIuix0cZeV1bQ.jpg", desc: "Personal motion graphics showreel.", youtube: "https://youtu.be/w0Sxz2GFe44" },
   { id: "catjipiti", type: "motion", eyebrow: "AXA MANDIRI · 2023", category: "MOTION", title: "Catjipiti AXA Mandiri", year: "2023", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/CbkkKnTXQZc7I359a6NR4Be2aRo.mp4", desc: "Social media feeds design and motion for AXA Mandiri." },
   { id: "djavu", type: "motion", eyebrow: "PERSONAL · 2024", category: "MOTION", title: "DJAVU Logo Motion", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/jpCkaZu8r5RzCXoYngvhO8OBOU.mp4", desc: "Logo motion design for DJAVU Creative." },
-  { id: "hang-tuah", type: "3d", eyebrow: "COLLEGE · 2025", category: "3D", title: "Hang Tuah & Hang Jebat", year: "2025", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/D2ClrMCVzMAvCXNHR3Go7obANjQ.mp4", desc: "Short 2D/3D animation project for Polimedia." },
-  { id: "rigid-body", type: "3d", eyebrow: "COLLEGE · 2024", category: "3D", title: "Rigid Body Sim", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/RKclWjZkdQRRQiJKSM5CPFZZOMM.mp4", desc: "Rigid body simulation and texturing in Autodesk Maya." },
+  { id: "hang-tuah", type: "3d", eyebrow: "COLLEGE · 2025", category: "3D", title: "Hang Tuah & Hang Jebat", year: "2025", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/D2ClrMCVzMAvCXNHR3Go7obANjQ.mp4", desc: "Short 2D/3D animation project for Polimedia.", youtube: "https://youtu.be/mRFGpTaDG34" },
+  { id: "rigid-body", type: "3d", eyebrow: "COLLEGE · 2024", category: "3D", title: "Rigid Body Sim", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/RKclWjZkdQRRQiJKSM5CPFZZOMM.mp4", desc: "Rigid body simulation and texturing in Autodesk Maya.", youtube: "https://youtu.be/dZyIAHOZef0" },
   { id: "windmill", type: "3d", eyebrow: "PERSONAL · 2024", category: "3D", title: "Windmill", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/s1FKfEjlCpWgZfPid5Qw6KaY.mp4", desc: "3D windmill artwork." },
   { id: "adjuice", type: "motion", eyebrow: "FREELANCE · 2024", category: "MOTION", title: "Adjuice Social Media", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/UyMTkzhIYR6KOcZL4WauavdM940.mp4", desc: "Social media motion graphics for Adjuice." },
   { id: "videolearning", type: "motion", eyebrow: "TELKOM · 2024", category: "MOTION", title: "Video Learning", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/OML9YKq80RWEamXPQDaYw2GfTss.mp4", desc: "Video learning materials for Telkom CorpU." },
   { id: "gizzi-susu", type: "motion", eyebrow: "DIBILABS · 2024", category: "MOTION", title: "Motion Gizzi", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/yQS73UK6MexGaktmfEkqPohP4X8.mp4", desc: "Motion graphics for Gizzi UHT." },
   { id: "hut-ri", type: "vfx", eyebrow: "FREELANCE · 2024", category: "VFX", title: "Parade HUT RI", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/qfW0xlf9we7HDXhp0XjWPuBa3E.mp4", desc: "Video editing for Independence Day parade." },
   { id: "gizzi-anak", type: "motion", eyebrow: "DIBILABS · 2024", category: "MOTION", title: "Gizzi Hari Anak", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/hKWV4l04uiPTAU18EZDMFFtUA.mp4", desc: "Motion graphics for Gizzi National Children's Day." },
-  { id: "3d-showreel", type: "3d", eyebrow: "PERSONAL · 2024", category: "3D", title: "3D Showreel", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/7SejrHjAR0gemdXw1c2EQ2NujQ.mp4", desc: "Compilation of my 3D artwork." },
+  { id: "3d-showreel", type: "3d", eyebrow: "PERSONAL · 2024", category: "3D", title: "3D Showreel", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/7SejrHjAR0gemdXw1c2EQ2NujQ.mp4", desc: "Compilation of my 3D artwork.", youtube: "https://youtu.be/Sk_Uw_BpRTY" },
   { id: "gita23rd", type: "motion", eyebrow: "FREELANCE · 2024", category: "MOTION", title: "Gita 23rd Birthday", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/XqAmC8E5WacMTftstK5DNlG2HP8.mp4", desc: "Fan video for JKT48 member." },
-  { id: "aftermovie", type: "vfx", eyebrow: "PERSONAL · 2024", category: "VFX", title: "Aftermovie Parade", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/hGTnvE3DoTPNnjBMdtAmdiaToA4.mp4", desc: "Documentation editing for Parade Otak Kanan." },
+  { id: "aftermovie", type: "vfx", eyebrow: "PERSONAL · 2024", category: "VFX", title: "Aftermovie Parade", year: "2024", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/hGTnvE3DoTPNnjBMdtAmdiaToA4.mp4", desc: "Documentation editing for Parade Otak Kanan.", youtube: "https://youtu.be/iIQyqquAgIg" },
   { id: "railways", type: "vfx", eyebrow: "PERSONAL · 2023", category: "VFX", title: "The Railways", year: "2023", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/cwES02aAV0MPRlhO1y2bXF5rs.mp4", desc: "Color grading experiment with Davinci Resolve." },
   { id: "axa-tm", type: "motion", eyebrow: "AXA MANDIRI · 2023", category: "MOTION", title: "AXA Motivational", year: "2023", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/NVedGjtN0Jug9NBkDKGaAp4YEs.mp4", desc: "Opening video for telemarketing motivational event." },
-  { id: "showreel-edit", type: "motion", eyebrow: "PERSONAL · 2023", category: "MOTION", title: "Showreel 2023", year: "2023", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/QkC1RcqN2rogPpOggxw7rHhwFUA.mp4", desc: "Video editing and motion graphics showreel." },
-  { id: "bts-photo", type: "vfx", eyebrow: "PERSONAL · 2022", category: "VFX", title: "BTS Photoshoot", year: "2022", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/QRcUQSCGpzMaL1IapHhJ7cU44.mp4", desc: "Behind the scenes photoshoot documentation." }
+  { id: "showreel-edit", type: "motion", eyebrow: "PERSONAL · 2023", category: "MOTION", title: "Showreel 2023", year: "2023", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/QkC1RcqN2rogPpOggxw7rHhwFUA.mp4", desc: "Video editing and motion graphics showreel.", youtube: "https://youtu.be/xMXOH_fMANg" },
+  { id: "bts-photo", type: "vfx", eyebrow: "PERSONAL · 2022", category: "VFX", title: "BTS Photoshoot", year: "2022", author: "Afit Suradiradja", vid: "https://framerusercontent.com/assets/QRcUQSCGpzMaL1IapHhJ7cU44.mp4", desc: "Behind the scenes photoshoot documentation.", youtube: "https://youtu.be/M4-RdMb5Jg4" }
 ];
 
 const Icons = {
@@ -124,7 +126,7 @@ function SlideContent({ slide, withModal, onExplore }) {
       )}
       <div style={{ position: "absolute", left: pad, bottom: "9dvh", display: "flex", flexDirection: "column", gap: 14, pointerEvents: 'none' }}>
         <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.4em", color: "rgba(255,255,255,0.5)" }}>{slide.category}</div>
-        <h2 style={{ fontWeight: 800, textTransform: "uppercase", fontSize: "clamp(2rem,8dvh,8rem)", lineHeight: 0.92, letterSpacing: "-0.04em", color: "#f6efe2" }}>{slide.title}</h2>
+        <h2 style={{ fontWeight: 800, textTransform: "uppercase", fontSize: "clamp(2.5rem,10vw,8rem)", lineHeight: 0.92, letterSpacing: "-0.04em", color: "#f6efe2", wordBreak: 'break-word', paddingRight: '20px' }}>{slide.title}</h2>
         {withModal && (
           <div style={{ display: "flex", gap: 12, fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.3em" }}>
             <span style={{ color: "rgba(255,255,255,0.4)" }}>AUTHOR</span>
@@ -133,6 +135,7 @@ function SlideContent({ slide, withModal, onExplore }) {
         )}
       </div>
       <div 
+        className="explore-btn-area"
         onMouseEnter={() => setHoverRight(true)} 
         onMouseLeave={() => setHoverRight(false)}
         onClick={(e) => { e.stopPropagation(); onExplore(slide); }}
@@ -313,7 +316,7 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
       {withModal && (
         <>
           <div data-nodrag onClick={() => setOpenSlide(null)} style={{ position: "absolute", zIndex: 40, top: "10%", height: "80%", left: "clamp(16px,7.5%,80px)", right: "clamp(16px,7.5%,80px)", borderRadius: 40, backgroundColor: openSlide ? "rgba(10,9,8,0.4)" : "rgba(10,9,8,0)", backdropFilter: openSlide ? "blur(14px)" : "blur(0px)", pointerEvents: openSlide ? "auto" : "none", transition: "all 600ms" }} />
-          <aside data-nodrag style={{ position: "absolute", zIndex: 50, top: "10%", height: "80%", right: "clamp(16px,7.5%,80px)", width: "min(600px, 52%)", borderRadius: 40, overflow: "hidden", color: "white", background: "linear-gradient(180deg,rgba(15,12,12,0.92) 0%,rgba(10,9,8,0.95) 100%)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.08)", transform: openSlide ? "translateX(0)" : "translateX(150%)", transition: "all 700ms cubic-bezier(0.22,1,0.36,1)", boxShadow: openSlide ? "-30px 0 80px -20px rgba(0,0,0,0.7)" : "none" }}>
+          <aside data-nodrag className="modal-panel" style={{ position: "absolute", zIndex: 50, top: "10%", height: "80%", right: "clamp(16px,7.5%,80px)", width: "min(600px, 52%)", borderRadius: 40, overflow: "hidden", color: "white", background: "linear-gradient(180deg,rgba(15,12,12,0.92) 0%,rgba(10,9,8,0.95) 100%)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.08)", transform: openSlide ? "translateX(0)" : "translateX(150%)", transition: "all 700ms cubic-bezier(0.22,1,0.36,1)", boxShadow: openSlide ? "-30px 0 80px -20px rgba(0,0,0,0.7)" : "none" }}>
             {openSlide && (
               <div style={{ height: "100%", width: "100%", overflowY: "auto", padding: "60px 40px" }}>
                 <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.3em', opacity: 0.5, marginBottom: 15 }}>{openSlide.category}</div>
@@ -321,6 +324,12 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
                 <div style={{ fontSize: 14, opacity: 0.8, marginBottom: 40 }}>{openSlide.author} · {openSlide.year}</div>
                 <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 40 }}></div>
                 <p style={{ fontSize: '1.1rem', lineHeight: 1.8, opacity: 0.8, marginBottom: 40 }}>{openSlide.desc}</p>
+                {openSlide.youtube && (
+                  <a href={openSlide.youtube} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: '#ff0000', color: '#fff', padding: '12px 24px', borderRadius: 999, textDecoration: 'none', fontWeight: 700, fontSize: 14, marginBottom: 40 }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    Watch Full Video
+                  </a>
+                )}
                 {openSlide.stats && (
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 20, marginBottom: 40 }}>
                     <StatItem label="Software" value={openSlide.stats.software} />
