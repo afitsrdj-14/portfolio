@@ -6,14 +6,44 @@ window.ABOUT_DATA = {
   "description": "a VFX & 3D Artist based in Jakarta, Indonesia.\n\nMy expertise lies in motion graphics, 3D FX & Animation, and VFX compositing. I strongly believe that the success of any project is rooted in great collaboration, open communication, and simply being kind.",
   "resume": "https://drive.google.com/file/d/1DIQA9XyH7Q8MbhCdcpfQfUNhiulLAtX-/view?usp=drive_link",
   "workExperience": [
-    { "year": "Mar 2025 - Present", "title": "Creative Designer", "company": "PT. Sahabat Mikro Fintek", "type": "Full-Time" },
-    { "year": "Current", "title": "Video Editor & Motion Designer", "company": "Freelance", "type": "Freelance" },
-    { "year": "Jul - Oct 2024", "title": "Motion Graphic Designer", "company": "Dibilabs.Id", "type": "Part-Time" },
-    { "year": "Feb - Jul 2024", "title": "Video Animator", "company": "PT. Telekomunikasi Indonesia", "type": "Internship" },
-    { "year": "May - Dec 2023", "title": "Graphic Designer", "company": "AXA Mandiri Financial Services", "type": "Internship" }
+    {
+      "year": "Mar 2025 - Present",
+      "title": "Creative Designer",
+      "company": "PT. Sahabat Mikro Fintek",
+      "type": "Full-Time"
+    },
+    {
+      "year": "Current",
+      "title": "Video Editor & Motion Designer",
+      "company": "Freelance",
+      "type": "Freelance"
+    },
+    {
+      "year": "Jul - Oct 2024",
+      "title": "Motion Graphic Designer",
+      "company": "Dibilabs.Id",
+      "type": "Part-Time"
+    },
+    {
+      "year": "Feb - Jul 2024",
+      "title": "Video Animator",
+      "company": "PT. Telekomunikasi Indonesia",
+      "type": "Internship"
+    },
+    {
+      "year": "May - Dec 2023",
+      "title": "Graphic Designer",
+      "company": "AXA Mandiri Financial Services",
+      "type": "Internship"
+    }
   ],
   "projectExperience": [
-    { "year": "2024", "title": "College CGI Animation Short", "company": "Polimedia", "type": "Project Lead" }
+    {
+      "year": "2024",
+      "title": "College CGI Animation Short",
+      "company": "Polimedia",
+      "type": "Project Lead"
+    }
   ]
 };
 
@@ -67,22 +97,98 @@ window.HOME_SLIDES = [
 
 window.PORTFOLIO_ITEMS = [
   {
+    "id": "new-project",
+    "type": "vfx",
+    "eyebrow": "BLEZZPOST STUDIO",
+    "category": "MOTION",
+    "title": "NTX - Ice Luv",
+    "year": "2026",
+    "role": "VFX Artist",
+    "img": "",
+    "vid": "",
+    "desc": "",
+    "youtube": "https://youtu.be/nNjabw6ybnQ?si=CxyzwiaVLN8ErpbV",
+    "client": "Blezzpost Studio",
+    "software": "after_effects"
+  },
+  {
+    "id": "new-project",
+    "type": "motion, vfx",
+    "eyebrow": "BLEZZPOST STUDIO",
+    "category": "MOTION",
+    "title": "Xodiac - Alibi",
+    "year": "2026",
+    "role": "VFX Artist",
+    "img": "",
+    "vid": "",
+    "desc": "",
+    "youtube": "https://youtu.be/4qdoevwJnOE?si=dtg2o0XlcaVlrUHD",
+    "client": "Blezzpost Studio",
+    "software": "after_effects"
+  },
+  {
+    "id": "new-project",
+    "type": "vfx",
+    "eyebrow": "BLEZZPOST STUDIO",
+    "category": "MOTION",
+    "title": "H1KEY - To. My First Love",
+    "year": "2026",
+    "role": "VFX Artist",
+    "img": "",
+    "vid": "",
+    "desc": "",
+    "youtube": "https://youtu.be/sBx08M4cDME?si=BrcI2okKopzSgqrM",
+    "software": "after_effects, mocha",
+    "client": "Blezzpost Studio"
+  },
+  {
+    "id": "new-project",
+    "type": "vfx",
+    "eyebrow": "BLEZZPOST STUDIO",
+    "category": "MOTION",
+    "title": "Waker Like That",
+    "year": "2026",
+    "role": "3D & VFX Artist",
+    "img": "",
+    "vid": "",
+    "desc": "",
+    "youtube": "https://youtu.be/ekQrIXjp2oA?si=XtJQzC7XtIE1Ozst",
+    "client": "Blezzpost Studio",
+    "software": "after_effects, mocha, blender"
+  },
+  {
+    "id": "new-project",
+    "type": "motion",
+    "eyebrow": "SAMIR",
+    "category": "MOTION",
+    "title": " Kenali Jenis Utang Biar Dompet Nggak Tumbang!",
+    "year": "2026",
+    "role": "3D & Motion Designer",
+    "img": "",
+    "vid": "",
+    "desc": "",
+    "youtube": "https://youtu.be/oYIk0hBSKSI?si=a6HjrY5Ifgkb1uOJ",
+    "client": "SAMIR",
+    "software": "blender, after_effects"
+  },
+  {
     "id": "skor-kredit-ami",
     "type": "motion",
     "eyebrow": "SAMIR",
     "category": "MOTION",
     "title": "Skor Kredit AMI",
     "year": "2026",
-    "role": "Motion Designer",
+    "role": "3D & Motion Designer",
     "img": "https://framerusercontent.com/images/0WpiRPcxuZt3PwSRdawkSG1iDQ.jpg",
     "desc": "A creative project for SAMIR.",
     "youtube": "https://youtu.be/RtNPeFRNIqc",
     "client": "SAMIR",
-    "software": "after_effects, premiere_pro"
+    "software": "after_effects, premiere_pro, blender",
+    "vid": "https://youtu.be/RtNPeFRNIqc?si=__dp3TJ6vxO-UlVd"
   },
   {
     "id": "videotron-samir",
-    "type": "vfx",
+    "type": "vfx, motion",
     "eyebrow": "SAMIR",
     "category": "MOTION",
     "title": "Videotron SAMIR",
@@ -92,7 +198,7 @@ window.PORTFOLIO_ITEMS = [
     "desc": "Videotron campaign for SAMIR.",
     "youtube": "https://youtu.be/xPB954pmRFw",
     "client": "SAMIR",
-    "software": "after_effects, premiere_pro, blender"
+    "software": "after_effects"
   },
   {
     "id": "motion-reel",
@@ -106,7 +212,7 @@ window.PORTFOLIO_ITEMS = [
     "desc": "Personal motion graphics showreel.",
     "youtube": "https://youtu.be/w0Sxz2GFe44",
     "client": "Personal",
-    "software": "after_effects, premiere_pro"
+    "software": "after_effects"
   },
   {
     "id": "catjipiti",
@@ -136,7 +242,7 @@ window.PORTFOLIO_ITEMS = [
   },
   {
     "id": "hang-tuah",
-    "type": "3d",
+    "type": "3d, motion",
     "eyebrow": "COLLEGE",
     "category": "3D",
     "title": "Hang Tuah & Hang Jebat",
@@ -173,7 +279,7 @@ window.PORTFOLIO_ITEMS = [
     "vid": "https://framerusercontent.com/assets/s1FKfEjlCpWgZfPid5Qw6KaY.mp4",
     "desc": "3D windmill artwork.",
     "client": "Personal",
-    "software": "blender"
+    "software": "maya"
   },
   {
     "id": "adjuice",
@@ -186,7 +292,7 @@ window.PORTFOLIO_ITEMS = [
     "vid": "https://framerusercontent.com/assets/UyMTkzhIYR6KOcZL4WauavdM940.mp4",
     "desc": "Social media motion graphics for Adjuice.",
     "client": "Adjuice",
-    "software": "after_effects, premiere_pro"
+    "software": "after_effects"
   },
   {
     "id": "videolearning",
@@ -212,11 +318,11 @@ window.PORTFOLIO_ITEMS = [
     "vid": "https://framerusercontent.com/assets/yQS73UK6MexGaktmfEkqPohP4X8.mp4",
     "desc": "Motion graphics for Gizzi UHT.",
     "client": "Dibilabs.Id",
-    "software": "after_effects, premiere_pro"
+    "software": "after_effects"
   },
   {
     "id": "hut-ri",
-    "type": "vfx",
+    "type": "motion",
     "eyebrow": "FREELANCE",
     "category": "VFX",
     "title": "Parade HUT RI",
@@ -225,7 +331,7 @@ window.PORTFOLIO_ITEMS = [
     "vid": "https://framerusercontent.com/assets/qfW0xlf9we7HDXhp0XjWPuBa3E.mp4",
     "desc": "Video editing for Independence Day parade.",
     "client": "Freelance",
-    "software": "premiere_pro"
+    "software": "davinci_resolve"
   },
   {
     "id": "3d-showreel",
@@ -252,7 +358,7 @@ window.PORTFOLIO_ITEMS = [
     "vid": "https://framerusercontent.com/assets/XqAmC8E5WacMTftstK5DNlG2HP8.mp4",
     "desc": "Fan video for JKT48 member.",
     "client": "Freelance",
-    "software": "premiere_pro"
+    "software": "after_effects"
   },
   {
     "id": "aftermovie",
