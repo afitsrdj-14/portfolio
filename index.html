@@ -10,6 +10,14 @@
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script>
+  Babel.registerPreset('react-classic', {
+    presets: [
+      [Babel.availablePresets['react'], { runtime: 'classic' }],
+      Babel.availablePresets['env']
+    ]
+  });
+</script>
 <script src="./data.js"></script>
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -93,17 +101,62 @@
     .contact-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 16px !important; padding: 0 20px; width: 100%; }
     .contact-card { width: 100% !important; height: 160px !important; padding: 20px !important; }
   }
+  @keyframes scrollLogos {
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-33.333%, 0, 0); }
+  }
+  .scroller-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 20px 0;
+  }
+  .scroller-container::before, .scroller-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: clamp(50px, 15vw, 200px);
+    z-index: 2;
+    pointer-events: none;
+  }
+  .scroller-container::before {
+    left: 0;
+    background: linear-gradient(90deg, #0a0908 0%, transparent 100%);
+  }
+  .scroller-container::after {
+    right: 0;
+    background: linear-gradient(-90deg, #0a0908 0%, transparent 100%);
+  }
+  .logo-track {
+    display: flex;
+    width: max-content;
+    animation: scrollLogos 30s linear infinite;
+  }
 </style>
 </head>
 <body>
 <div id="root"></div>
 
-<script type="text/babel">
+<script type="text/babel" data-presets="react-classic">
 const { useState, useRef, useEffect, useCallback } = React;
 
 /* ─── Data ─────────────────────────────────────────────────────── */
 const HOME_SLIDES = window.HOME_SLIDES;
 const PORTFOLIO_ITEMS = window.PORTFOLIO_ITEMS;
+
+const SOFTWARE_REGISTRY = {
+  "after_effects": { "name": "After Effects", "logo": "./Logo/Adobe_After_Effects_CC_2026_icon.svg.png" },
+  "photoshop": { "name": "Photoshop", "logo": "./Logo/Adobe_Photoshop_CC_2026_icon.svg.png" },
+  "premiere_pro": { "name": "Premiere Pro", "logo": "./Logo/Adobe_Premiere_Pro_CC_2026_icon.svg.png" },
+  "blender": { "name": "Blender 3D", "logo": "./Logo/Blender_logo_no_text.svg.png" },
+  "davinci_resolve": { "name": "Davinci Resolve", "logo": "./Logo/Davinci Resolve.png" },
+  "unreal_engine": { "name": "Unreal Engine", "logo": "./Logo/Unreal_Engine-Logo.wine.png" },
+  "houdini": { "name": "Houdini", "logo": "./Logo/houdini.png" },
+  "iclone": { "name": "iClone", "logo": "./Logo/iclone_1000x1000_whitebg_colorlogo_word.png" },
+  "maya": { "name": "Autodesk Maya", "logo": "./Logo/maya.png" },
+  "mocha": { "name": "Mocha", "logo": "./Logo/mocha-logo-png_seeklogo-444948.png" }
+};
 
 const DEFAULT_ABOUT = {
   title: "Hola!<br/>I'm Afit.",
@@ -358,9 +411,40 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
               <div style={{ height: "100%", width: "100%", overflowY: "auto", padding: "60px 40px" }}>
                 <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.3em', opacity: 0.5, marginBottom: 15 }}>{openSlide.category}</div>
                 <h2 style={{ fontSize: 'clamp(2.5rem, 4vw, 4rem)', fontWeight: 800, marginBottom: 20, lineHeight: 1 }}>{openSlide.title}</h2>
-                <div style={{ fontSize: 14, opacity: 0.8, marginBottom: 40 }}>{openSlide.role} · {openSlide.year}</div>
+                <div style={{ fontSize: 14, opacity: 0.8, marginBottom: 40 }}>{openSlide.role}</div>
                 <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 40 }}></div>
                 <p style={{ fontSize: '1.1rem', lineHeight: 1.8, opacity: 0.8, marginBottom: 40 }}>{openSlide.desc}</p>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 40, borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '20px 0' }}>
+                  <div>
+                    <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.4)', marginBottom: 6 }}>Client / Company</div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.95)' }}>{openSlide.client || "Personal Project"}</div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.4)', marginBottom: 6 }}>Year</div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.95)' }}>{openSlide.year}</div>
+                  </div>
+                </div>
+                {openSlide.software && (() => {
+                  const keys = openSlide.software.split(',').map(s => s.trim()).filter(Boolean);
+                  if (keys.length === 0) return null;
+                  return (
+                    <div style={{ marginBottom: 40 }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.4)', marginBottom: 12 }}>Software Used</div>
+                      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                        {keys.map(key => {
+                          const info = SOFTWARE_REGISTRY[key];
+                          if (!info) return null;
+                          return (
+                            <div key={key} title={info.name} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, padding: '6px 12px' }}>
+                              <img src={info.logo} alt={info.name} style={{ width: 16, height: 16, objectFit: 'contain' }} />
+                              <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.85)' }}>{info.name}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()}
                 {openSlide.youtube && (() => {
                   let btnColor = '#ff0000', icon = Icons.youtube, label = 'Watch Full Video';
                   if (openSlide.linkPlatform === 'instagram') { btnColor = '#E1306C'; icon = Icons.instagram; label = 'View on Instagram'; }
@@ -372,13 +456,6 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
                     </a>
                   );
                 })()}
-                {openSlide.stats && (
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 20, marginBottom: 40 }}>
-                    <StatItem label="Software" value={openSlide.stats.software} />
-                    <StatItem label="Render" value={openSlide.stats.render} />
-                    <StatItem label="Runtime" value={openSlide.stats.runtime} />
-                  </div>
-                )}
                 <button onClick={() => setOpenSlide(null)} style={{ position: 'absolute', top: 20, right: 20, background: 'rgba(255,255,255,0.1)', border: 'none', color: '#fff', width: 40, height: 40, borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, transition: 'background 0.2s' }} onMouseEnter={e => e.currentTarget.style.background='rgba(255,255,255,0.2)'} onMouseLeave={e => e.currentTarget.style.background='rgba(255,255,255,0.1)'}>✕</button>
               </div>
             )}
@@ -492,7 +569,7 @@ function Hero() {
       {/* Replace src with your video URL when ready */}
       <video 
         className="hero-video"
-        src="" 
+        src="https://pub-0f75086adbcd47a59695cf212e2c497b.r2.dev/7SejrHjAR0gemdXw1c2EQ2NujQ.mp4" 
         autoPlay loop muted playsInline
         style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.6, zIndex: 0, WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 60%, transparent 100%)', maskImage: 'linear-gradient(to bottom, black 0%, black 60%, transparent 100%)' }}
       />
@@ -521,10 +598,68 @@ function Hero() {
   )
 }
 
+function PartnerScroller() {
+  const logos = [
+    "./Companys Logo/1667964296_636b1d886b9483.95660616.webp",
+    "./Companys Logo/LOGO GIZZI.png",
+    "./Companys Logo/LOGO TELKOM CORPU.png",
+    "./Companys Logo/Logo Samir Orange (1).png",
+    "./Companys Logo/Trinity Studios.png",
+    "./Companys Logo/Tristar.png",
+    "./Companys Logo/Untitled design_20240618_172309_0000.png",
+    "./Companys Logo/logo-axa-mandiri-01.png"
+  ];
+  
+  const doubleLogos = [...logos, ...logos, ...logos];
+  
+  return (
+    <section style={{ 
+      background: "#0a0908", 
+      padding: "80px 0", 
+      display: "flex", 
+      flexDirection: "column", 
+      alignItems: "center", 
+      justifyContent: "center",
+      scrollSnapAlign: "start",
+      borderBottom: "1px solid rgba(255,255,255,0.03)"
+    }}>
+      <h3 style={{ 
+        fontSize: 12, 
+        fontWeight: 700, 
+        textTransform: "uppercase", 
+        letterSpacing: "0.35em", 
+        color: "rgba(255,255,255,0.4)", 
+        marginBottom: 40,
+        textAlign: "center"
+      }}>
+        Trusted By & Partnered With
+      </h3>
+      <div className="scroller-container">
+        <div className="logo-track">
+          {doubleLogos.map((src, idx) => (
+            <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60px', margin: '0 40px' }}>
+              <img 
+                src={src} 
+                alt="Partner Logo" 
+                style={{ 
+                  maxHeight: "100%", 
+                  maxWidth: "180px", 
+                  objectFit: "contain"
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Home({ goToProjects, setRoute }) {
   return (
     <div>
       <div style={{ height: '100vh', scrollSnapAlign: 'start' }}><Hero /></div>
+      <PartnerScroller />
       <CinemaReel mode="sticky" slides={HOME_SLIDES} withModal={false} onExplore={s => goToProjects(s.type)} />
       <div style={{ scrollSnapAlign: 'start' }}><Footer setRoute={setRoute} /></div>
     </div>
@@ -566,61 +701,100 @@ function ExperienceItem({ year, title, company, type }) {
   )
 }
 
-function ToolPill({ label }) {
-  return <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', padding: '12px 24px', borderRadius: 999, fontSize: 13, fontWeight: 600, letterSpacing: '0.05em' }}>{label}</div>;
+function ToolCard({ name, logo }) {
+  return (
+    <div style={{ 
+      display: 'flex', 
+      alignItems: 'center', 
+      gap: 12, 
+      background: 'rgba(255,255,255,0.02)', 
+      border: '1px solid rgba(255,255,255,0.05)', 
+      borderRadius: 16, 
+      padding: '10px 18px', 
+      transition: 'all 0.3s' 
+    }}
+    onMouseEnter={e => {
+      e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+      e.currentTarget.style.transform = 'translateY(-2px)';
+    }}
+    onMouseLeave={e => {
+      e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
+      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)';
+      e.currentTarget.style.transform = 'translateY(0)';
+    }}
+    >
+      <img src={logo} alt={name} style={{ width: 24, height: 24, objectFit: 'contain' }} />
+      <span style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.85)' }}>{name}</span>
+    </div>
+  );
 }
 
 function About() {
   const data = window.ABOUT_DATA || DEFAULT_ABOUT;
   const paragraphs = data.description.split('\n').filter(p => p.trim() !== '');
+  const workExperience = data.workExperience || [];
+  const projectExperience = data.projectExperience || [];
   return (
     <div style={{ minHeight: '100vh', paddingTop: 140, display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#0a0908' }}>
       <div style={{ width: 'min(900px, 90%)', position: 'relative', flex: 1, paddingBottom: 100 }}>
          
          <FadeIn delay={100}>
-           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'clamp(30px, 8vw, 60px)', alignItems: 'start', marginBottom: 120 }}>
-              <div style={{ paddingRight: 0 }}>
-                <h1 style={{ fontSize: 'clamp(2.5rem, 8vw, 4.5rem)', fontWeight: 800, marginBottom: 30, letterSpacing: '-0.03em', lineHeight: 1.1 }} dangerouslySetInnerHTML={{ __html: data.title }} />
-                <div style={{ fontSize: 'clamp(1rem, 3vw, 1.15rem)', lineHeight: 1.8, color: 'rgba(255,255,255,0.8)', display: 'flex', flexDirection: 'column', gap: 20 }}>
-                   {paragraphs.map((p, i) => <p key={i}>{p}</p>)}
-                </div>
-              </div>
-              <div className="about-photo" style={{ width: '100%', aspectRatio: '4/5', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                 <span style={{ opacity: 0.3, letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: 10, fontWeight: 700, padding: 20, textAlign: 'center' }}>PHOTO PLACEHOLDER</span>
-              </div>
-           </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'clamp(30px, 8vw, 60px)', alignItems: 'start', marginBottom: 120 }}>
+               <div style={{ paddingRight: 0 }}>
+                 <h1 style={{ fontSize: 'clamp(2.5rem, 8vw, 4.5rem)', fontWeight: 800, marginBottom: 30, letterSpacing: '-0.03em', lineHeight: 1.1 }} dangerouslySetInnerHTML={{ __html: data.title }} />
+                 <div style={{ fontSize: 'clamp(1rem, 3vw, 1.15rem)', lineHeight: 1.8, color: 'rgba(255,255,255,0.8)', display: 'flex', flexDirection: 'column', gap: 20 }}>
+                    {paragraphs.map((p, i) => <p key={i}>{p}</p>)}
+                 </div>
+                 {data.resume && (
+                    <a href={data.resume} target="_blank" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: '#fff', color: '#000', padding: '12px 24px', borderRadius: 999, textDecoration: 'none', fontWeight: 700, fontSize: 14, marginTop: 40, width: 'fit-content', transition: 'transform 0.3s' }} onMouseEnter={e => e.currentTarget.style.transform='scale(1.05)'} onMouseLeave={e => e.currentTarget.style.transform='scale(1)'}>
+                       Download Resume
+                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </a>
+                 )}
+               </div>
+               <div className="about-photo" style={{ width: '100%', aspectRatio: '4/5', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ opacity: 0.3, letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: 10, fontWeight: 700, padding: 20, textAlign: 'center' }}>PHOTO PLACEHOLDER</span>
+               </div>
+            </div>
          </FadeIn>
 
          <FadeIn delay={100}>
-           <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20, letterSpacing: '-0.02em', color: '#fff' }}>Experience</h2>
-           <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', marginBottom: 80 }}>
-              <ExperienceItem year="Mar 2025 - Present" title="Creative Designer" company="PT. Sahabat Mikro Fintek" type="Full-Time" />
-              <ExperienceItem year="Current" title="Video Editor & Motion Designer" company="Freelance" type="Freelance" />
-              <ExperienceItem year="Jul - Oct 2024" title="Motion Graphic Designer" company="Dibilabs.Id" type="Part-Time" />
-              <ExperienceItem year="Feb - Jul 2024" title="Video Animator" company="PT. Telekomunikasi Indonesia" type="Internship" />
-              <ExperienceItem year="May - Dec 2023" title="Graphic Designer" company="AXA Mandiri Financial Services" type="Internship" />
-           </div>
+            <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20, letterSpacing: '-0.02em', color: '#fff' }}>Work Experience</h2>
+            <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', marginBottom: 80 }}>
+               {workExperience.map((exp, idx) => (
+                  <ExperienceItem key={idx} year={exp.year} title={exp.title} company={exp.company} type={exp.type} />
+               ))}
+            </div>
          </FadeIn>
 
          <FadeIn delay={100}>
-           <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20, letterSpacing: '-0.02em', color: '#fff' }}>Education</h2>
-           <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', marginBottom: 80 }}>
-              <ExperienceItem year="2021 - 2025" title="Animation Major" company="Politeknik Negeri Media Kreatif" type="Degree" />
-           </div>
+            <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20, letterSpacing: '-0.02em', color: '#fff' }}>Project Experience</h2>
+            <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', marginBottom: 80 }}>
+               {projectExperience.length > 0 ? (
+                  projectExperience.map((exp, idx) => (
+                     <ExperienceItem key={idx} year={exp.year} title={exp.title} company={exp.company} type={exp.type} />
+                  ))
+               ) : (
+                  <div style={{ padding: '20px 0', opacity: 0.5, fontSize: 14 }}>No project experience added yet.</div>
+               )}
+            </div>
          </FadeIn>
 
          <FadeIn delay={100}>
-           <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 30, letterSpacing: '-0.02em', color: '#fff' }}>Tools & Software</h2>
-           <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-              <ToolPill label="After Effects" />
-              <ToolPill label="Premiere Pro" />
-              <ToolPill label="Cinema 4D" />
-              <ToolPill label="Blender 3D" />
-              <ToolPill label="Autodesk Maya" />
-              <ToolPill label="Davinci Resolve" />
-              <ToolPill label="Photoshop" />
-              <ToolPill label="Illustrator" />
-           </div>
+            <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20, letterSpacing: '-0.02em', color: '#fff' }}>Education</h2>
+            <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', marginBottom: 80 }}>
+               <ExperienceItem year="2021 - 2025" title="Animation Major" company="Politeknik Negeri Media Kreatif" type="Bachelor Degree" />
+            </div>
+         </FadeIn>
+
+         <FadeIn delay={100}>
+            <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 30, letterSpacing: '-0.02em', color: '#fff' }}>Tools & Software</h2>
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+               {Object.entries(SOFTWARE_REGISTRY).map(([key, info]) => (
+                  <ToolCard key={key} name={info.name} logo={info.logo} />
+               ))}
+            </div>
          </FadeIn>
       </div>
       <MiniFooter />
@@ -676,7 +850,7 @@ function FilterItem({ active, onClick, label, icon, isOpen }) {
 }
 
 function Projects({ filter, setFilter }) {
-  const filtered = PORTFOLIO_ITEMS.filter(p => filter === 'all' || p.type === filter);
+  const filtered = PORTFOLIO_ITEMS.filter(p => filter === 'all' || p.type.split(',').map(s=>s.trim()).includes(filter));
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 800);
@@ -823,33 +997,72 @@ function AdminPanel() {
                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16 }}>
                  <div>
                    <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Title</label>
-                   <input value={item.title} onChange={e => { const n = [...items]; n[idx].title = e.target.value; setItems(n); }} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+                   <input value={item.title} onChange={e => { const n = [...items]; n[idx].title = e.target.value; setItems(n); }} style={{ width: '100%', padding: 12, marginTop: 6, background: '#2c2c2e', color: '#fff', border: '1px solid #38383a', borderRadius: 8, outline: 'none' }} />
                  </div>
                  <div>
                    <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Role</label>
-                   <input value={item.role} onChange={e => { const n = [...items]; n[idx].role = e.target.value; setItems(n); }} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+                   <input value={item.role} onChange={e => { const n = [...items]; n[idx].role = e.target.value; setItems(n); }} style={{ width: '100%', padding: 12, marginTop: 6, background: '#2c2c2e', color: '#fff', border: '1px solid #38383a', borderRadius: 8, outline: 'none' }} />
                  </div>
                  <div>
-                   <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Client / Top Right Text</label>
-                   <input value={item.eyebrow} onChange={e => { const n = [...items]; n[idx].eyebrow = e.target.value; setItems(n); }} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+                   <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Client / Company</label>
+                   <input value={item.client || ''} onChange={e => { const n = [...items]; n[idx].client = e.target.value; const n2 = [...n]; n2[idx].eyebrow = e.target.value.toUpperCase(); setItems(n2); }} style={{ width: '100%', padding: 12, marginTop: 6, background: '#2c2c2e', color: '#fff', border: '1px solid #38383a', borderRadius: 8, outline: 'none' }} />
                  </div>
                  <div>
-                   <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Filter Category</label>
-                   <select value={item.type || 'motion'} onChange={e => { const n = [...items]; n[idx].type = e.target.value; setItems(n); }} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }}>
-                     <option value="motion">Motion</option>
-                     <option value="3d">3D</option>
-                     <option value="vfx">VFX</option>
-                   </select>
+                   <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Categories</label>
+                   <div style={{ display: 'flex', gap: 16, marginTop: 12 }}>
+                     {["motion", "3d", "vfx"].map(cat => {
+                       const isChecked = (item.type || "").split(',').map(s=>s.trim()).includes(cat);
+                       return (
+                         <label key={cat} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, cursor: 'pointer', color: '#fff' }}>
+                           <input type="checkbox" checked={isChecked} onChange={(e) => {
+                             const n = [...items];
+                             let current = (n[idx].type || "").split(',').map(s=>s.trim()).filter(Boolean);
+                             if (e.target.checked && !current.includes(cat)) current.push(cat);
+                             else if (!e.target.checked) current = current.filter(c => c !== cat);
+                             n[idx].type = current.join(', ');
+                             setItems(n);
+                           }} style={{ width: 16, height: 16, accentColor: '#007AFF', cursor: 'pointer' }} />
+                           {cat.toUpperCase()}
+                         </label>
+                       )
+                     })}
+                   </div>
                  </div>
                  <div>
                    <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>External Link</label>
                    <div style={{ display: 'flex', gap: 10, marginTop: 6 }}>
-                     <select value={item.linkPlatform || 'youtube'} onChange={e => { const n = [...items]; n[idx].linkPlatform = e.target.value; setItems(n); }} style={{ padding: 12, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }}>
+                     <select value={item.linkPlatform || 'youtube'} onChange={e => { const n = [...items]; n[idx].linkPlatform = e.target.value; setItems(n); }} style={{ padding: 12, background: '#2c2c2e', color: '#fff', border: '1px solid #38383a', borderRadius: 8, outline: 'none' }}>
                        <option value="youtube">YouTube</option>
                        <option value="instagram">Instagram</option>
                        <option value="drive">Google Drive</option>
                      </select>
-                     <input placeholder="https://" value={item.youtube || ''} onChange={e => { const n = [...items]; n[idx].youtube = e.target.value; setItems(n); }} style={{ flex: 1, padding: 12, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+                     <input placeholder="https://" value={item.youtube || ''} onChange={e => { const n = [...items]; n[idx].youtube = e.target.value; setItems(n); }} style={{ flex: 1, padding: 12, background: '#2c2c2e', color: '#fff', border: '1px solid #38383a', borderRadius: 8, outline: 'none' }} />
+                   </div>
+                 </div>
+                 <div style={{ gridColumn: '1 / -1' }}>
+                   <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Software Used</label>
+                   <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 12 }}>
+                     {Object.entries(SOFTWARE_REGISTRY).map(([key, info]) => {
+                       const currentList = (item.software || "").split(',').map(s=>s.trim()).filter(Boolean);
+                       const isChecked = currentList.includes(key);
+                       return (
+                         <label key={key} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, cursor: 'pointer', color: '#fff' }}>
+                           <input type="checkbox" checked={isChecked} onChange={(e) => {
+                             const n = [...items];
+                             let current = (n[idx].software || "").split(',').map(s=>s.trim()).filter(Boolean);
+                             if (e.target.checked && !current.includes(key)) {
+                               current.push(key);
+                             } else if (!e.target.checked) {
+                               current = current.filter(k => k !== key);
+                             }
+                             n[idx].software = current.join(', ');
+                             setItems(n);
+                           }} style={{ width: 16, height: 16, accentColor: '#007AFF', cursor: 'pointer' }} />
+                           <img src={info.logo} alt={info.name} style={{ width: 16, height: 16, objectFit: 'contain' }} />
+                           {info.name}
+                         </label>
+                       );
+                     })}
                    </div>
                  </div>
                  <div>
@@ -868,17 +1081,131 @@ function AdminPanel() {
 
        {tab === 'about' && (
          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-           <div style={{ background: 'rgba(255,255,255,0.02)', padding: 24, borderRadius: 16, border: '1px solid rgba(255,255,255,0.05)' }}>
+           <div style={{ background: '#1c1c1e', padding: 24, borderRadius: 16, border: '1px solid #2c2c2e' }}>
              <h3 style={{ marginBottom: 20, fontSize: 18, fontWeight: 600 }}>Edit About Page</h3>
              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                <div>
                  <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Title (supports &lt;br/&gt;)</label>
-                 <input value={aboutData.title} onChange={e => setAboutData({...aboutData, title: e.target.value})} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none' }} />
+                 <input value={aboutData.title} onChange={e => setAboutData({...aboutData, title: e.target.value})} style={{ width: '100%', padding: 12, marginTop: 6, background: '#2c2c2e', color: '#fff', border: '1px solid #38383a', borderRadius: 8, outline: 'none' }} />
                </div>
                <div>
                  <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Description (use Enter for new paragraphs)</label>
-                 <textarea value={aboutData.description} onChange={e => setAboutData({...aboutData, description: e.target.value})} style={{ width: '100%', padding: 12, marginTop: 6, background: 'rgba(0,0,0,0.2)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, outline: 'none', minHeight: 200, fontFamily: 'inherit' }} />
+                 <textarea value={aboutData.description} onChange={e => setAboutData({...aboutData, description: e.target.value})} style={{ width: '100%', padding: 12, marginTop: 6, background: '#2c2c2e', color: '#fff', border: '1px solid #38383a', borderRadius: 8, outline: 'none', minHeight: 200, fontFamily: 'inherit' }} />
                </div>
+               <div>
+                 <label style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em' }}>Resume Link (Google Drive / PDF URL)</label>
+                 <input value={aboutData.resume || ''} onChange={e => setAboutData({...aboutData, resume: e.target.value})} style={{ width: '100%', padding: 12, marginTop: 6, background: '#2c2c2e', color: '#fff', border: '1px solid #38383a', borderRadius: 8, outline: 'none' }} />
+               </div>
+             </div>
+           </div>
+
+           {/* Work Experience Section */}
+           <div style={{ background: '#1c1c1e', padding: 24, borderRadius: 16, border: '1px solid #2c2c2e' }}>
+             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: 10 }}>
+               <h3 style={{ fontSize: 18, fontWeight: 600 }}>Work Experience</h3>
+               <button onClick={() => {
+                 const newAbout = {...aboutData};
+                 newAbout.workExperience = [{ year: '2026', title: 'New Role', company: 'Company', type: 'Full-Time' }, ...(newAbout.workExperience || [])];
+                 setAboutData(newAbout);
+               }} style={{ padding: '6px 12px', background: '#007AFF', color: '#fff', border: 'none', borderRadius: 6, fontWeight: 700, cursor: 'pointer' }}>+ Add Work</button>
+             </div>
+             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+               {(aboutData.workExperience || []).map((exp, idx) => (
+                 <div key={idx} style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr 1.5fr 1fr auto', gap: 12, alignItems: 'end', background: '#2c2c2e', padding: 16, borderRadius: 12 }}>
+                   <div>
+                     <label style={{ fontSize: 9, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700 }}>Year</label>
+                     <input value={exp.year} onChange={e => {
+                       const newAbout = {...aboutData};
+                       newAbout.workExperience[idx].year = e.target.value;
+                       setAboutData(newAbout);
+                     }} style={{ width: '100%', padding: 8, marginTop: 4, background: '#1c1c1e', color: '#fff', border: '1px solid #38383a', borderRadius: 6, outline: 'none' }} />
+                   </div>
+                   <div>
+                     <label style={{ fontSize: 9, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700 }}>Title</label>
+                     <input value={exp.title} onChange={e => {
+                       const newAbout = {...aboutData};
+                       newAbout.workExperience[idx].title = e.target.value;
+                       setAboutData(newAbout);
+                     }} style={{ width: '100%', padding: 8, marginTop: 4, background: '#1c1c1e', color: '#fff', border: '1px solid #38383a', borderRadius: 6, outline: 'none' }} />
+                   </div>
+                   <div>
+                     <label style={{ fontSize: 9, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700 }}>Company</label>
+                     <input value={exp.company} onChange={e => {
+                       const newAbout = {...aboutData};
+                       newAbout.workExperience[idx].company = e.target.value;
+                       setAboutData(newAbout);
+                     }} style={{ width: '100%', padding: 8, marginTop: 4, background: '#1c1c1e', color: '#fff', border: '1px solid #38383a', borderRadius: 6, outline: 'none' }} />
+                   </div>
+                   <div>
+                     <label style={{ fontSize: 9, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700 }}>Type</label>
+                     <input value={exp.type} onChange={e => {
+                       const newAbout = {...aboutData};
+                       newAbout.workExperience[idx].type = e.target.value;
+                       setAboutData(newAbout);
+                     }} style={{ width: '100%', padding: 8, marginTop: 4, background: '#1c1c1e', color: '#fff', border: '1px solid #38383a', borderRadius: 6, outline: 'none' }} />
+                   </div>
+                   <button onClick={() => {
+                     const newAbout = {...aboutData};
+                     newAbout.workExperience.splice(idx, 1);
+                     setAboutData(newAbout);
+                   }} style={{ background: 'rgba(255,0,0,0.1)', color: '#ff4444', border: 'none', padding: '8px 12px', borderRadius: 6, fontWeight: 700, cursor: 'pointer' }}>Delete</button>
+                 </div>
+               ))}
+             </div>
+           </div>
+
+           {/* Project Experience Section */}
+           <div style={{ background: '#1c1c1e', padding: 24, borderRadius: 16, border: '1px solid #2c2c2e' }}>
+             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: 10 }}>
+               <h3 style={{ fontSize: 18, fontWeight: 600 }}>Project Experience</h3>
+               <button onClick={() => {
+                 const newAbout = {...aboutData};
+                 newAbout.projectExperience = [{ year: '2026', title: 'New Project', company: 'Company', type: 'Lead' }, ...(newAbout.projectExperience || [])];
+                 setAboutData(newAbout);
+               }} style={{ padding: '6px 12px', background: '#007AFF', color: '#fff', border: 'none', borderRadius: 6, fontWeight: 700, cursor: 'pointer' }}>+ Add Project</button>
+             </div>
+             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+               {(aboutData.projectExperience || []).map((exp, idx) => (
+                 <div key={idx} style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr 1.5fr 1fr auto', gap: 12, alignItems: 'end', background: '#2c2c2e', padding: 16, borderRadius: 12 }}>
+                   <div>
+                     <label style={{ fontSize: 9, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700 }}>Year</label>
+                     <input value={exp.year} onChange={e => {
+                       const newAbout = {...aboutData};
+                       newAbout.projectExperience[idx].year = e.target.value;
+                       setAboutData(newAbout);
+                     }} style={{ width: '100%', padding: 8, marginTop: 4, background: '#1c1c1e', color: '#fff', border: '1px solid #38383a', borderRadius: 6, outline: 'none' }} />
+                   </div>
+                   <div>
+                     <label style={{ fontSize: 9, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700 }}>Title</label>
+                     <input value={exp.title} onChange={e => {
+                       const newAbout = {...aboutData};
+                       newAbout.projectExperience[idx].title = e.target.value;
+                       setAboutData(newAbout);
+                     }} style={{ width: '100%', padding: 8, marginTop: 4, background: '#1c1c1e', color: '#fff', border: '1px solid #38383a', borderRadius: 6, outline: 'none' }} />
+                   </div>
+                   <div>
+                     <label style={{ fontSize: 9, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700 }}>Company/Client</label>
+                     <input value={exp.company} onChange={e => {
+                       const newAbout = {...aboutData};
+                       newAbout.projectExperience[idx].company = e.target.value;
+                       setAboutData(newAbout);
+                     }} style={{ width: '100%', padding: 8, marginTop: 4, background: '#1c1c1e', color: '#fff', border: '1px solid #38383a', borderRadius: 6, outline: 'none' }} />
+                   </div>
+                   <div>
+                     <label style={{ fontSize: 9, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700 }}>Type</label>
+                     <input value={exp.type} onChange={e => {
+                       const newAbout = {...aboutData};
+                       newAbout.projectExperience[idx].type = e.target.value;
+                       setAboutData(newAbout);
+                     }} style={{ width: '100%', padding: 8, marginTop: 4, background: '#1c1c1e', color: '#fff', border: '1px solid #38383a', borderRadius: 6, outline: 'none' }} />
+                   </div>
+                   <button onClick={() => {
+                     const newAbout = {...aboutData};
+                     newAbout.projectExperience.splice(idx, 1);
+                     setAboutData(newAbout);
+                   }} style={{ background: 'rgba(255,0,0,0.1)', color: '#ff4444', border: 'none', padding: '8px 12px', borderRadius: 6, fontWeight: 700, cursor: 'pointer' }}>Delete</button>
+                 </div>
+               ))}
              </div>
            </div>
          </div>

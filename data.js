@@ -3,7 +3,18 @@
 
 window.ABOUT_DATA = {
   "title": "Hola!<br/>I'm Afit.",
-  "description": "I’m a visual designer and animator based in Jakarta, Indonesia. I recently graduated with a degree in Animation from Politeknik Negeri Media Kreatif.\n\nMy expertise lies in motion graphics, 3D art, and visual effects compositing. I strongly believe that the success of any project is rooted in great collaboration, open communication, and simply being kind."
+  "description": "a VFX & 3D Artist based in Jakarta, Indonesia.\n\nMy expertise lies in motion graphics, 3D FX & Animation, and VFX compositing. I strongly believe that the success of any project is rooted in great collaboration, open communication, and simply being kind.",
+  "resume": "https://drive.google.com/file/d/1DIQA9XyH7Q8MbhCdcpfQfUNhiulLAtX-/view?usp=drive_link",
+  "workExperience": [
+    { "year": "Mar 2025 - Present", "title": "Creative Designer", "company": "PT. Sahabat Mikro Fintek", "type": "Full-Time" },
+    { "year": "Current", "title": "Video Editor & Motion Designer", "company": "Freelance", "type": "Freelance" },
+    { "year": "Jul - Oct 2024", "title": "Motion Graphic Designer", "company": "Dibilabs.Id", "type": "Part-Time" },
+    { "year": "Feb - Jul 2024", "title": "Video Animator", "company": "PT. Telekomunikasi Indonesia", "type": "Internship" },
+    { "year": "May - Dec 2023", "title": "Graphic Designer", "company": "AXA Mandiri Financial Services", "type": "Internship" }
+  ],
+  "projectExperience": [
+    { "year": "2024", "title": "College CGI Animation Short", "company": "Polimedia", "type": "Project Lead" }
+  ]
 };
 
 window.CONTACT_DATA = {
@@ -62,7 +73,9 @@ window.PORTFOLIO_ITEMS = [
     "role": "Motion Designer",
     "img": "https://framerusercontent.com/images/0WpiRPcxuZt3PwSRdawkSG1iDQ.jpg",
     "desc": "A creative project for SAMIR.",
-    "youtube": "https://youtu.be/RtNPeFRNIqc"
+    "youtube": "https://youtu.be/RtNPeFRNIqc",
+    "client": "SAMIR",
+    "software": "after_effects, premiere_pro"
   },
   {
     "id": "videotron-samir",
@@ -74,7 +87,9 @@ window.PORTFOLIO_ITEMS = [
     "role": "VFX Artist",
     "img": "https://framerusercontent.com/images/0oKYWHvzgXRpteR8y0rNk0S2r4.jpg",
     "desc": "Videotron campaign for SAMIR.",
-    "youtube": "https://youtu.be/xPB954pmRFw"
+    "youtube": "https://youtu.be/xPB954pmRFw",
+    "client": "SAMIR",
+    "software": "after_effects, premiere_pro, blender"
   },
   {
     "id": "motion-reel",
@@ -86,7 +101,9 @@ window.PORTFOLIO_ITEMS = [
     "role": "Motion Designer",
     "img": "https://framerusercontent.com/images/QlHF5Lp9xONQXIuix0cZeV1bQ.jpg",
     "desc": "Personal motion graphics showreel.",
-    "youtube": "https://youtu.be/w0Sxz2GFe44"
+    "youtube": "https://youtu.be/w0Sxz2GFe44",
+    "client": "Personal",
+    "software": "after_effects, premiere_pro"
   },
   {
     "id": "catjipiti",
@@ -97,7 +114,9 @@ window.PORTFOLIO_ITEMS = [
     "year": "2023",
     "role": "Motion Designer",
     "vid": "https://framerusercontent.com/assets/CbkkKnTXQZc7I359a6NR4Be2aRo.mp4",
-    "desc": "Social media feeds design and motion for AXA Mandiri."
+    "desc": "Social media feeds design and motion for AXA Mandiri.",
+    "client": "AXA Mandiri",
+    "software": "after_effects, photoshop"
   },
   {
     "id": "djavu",
@@ -108,7 +127,9 @@ window.PORTFOLIO_ITEMS = [
     "year": "2024",
     "role": "Motion Designer",
     "vid": "https://framerusercontent.com/assets/jpCkaZu8r5RzCXoYngvhO8OBOU.mp4",
-    "desc": "Logo motion design for DJAVU Creative."
+    "desc": "Logo motion design for DJAVU Creative.",
+    "client": "Personal",
+    "software": "after_effects"
   },
   {
     "id": "hang-tuah",
@@ -120,7 +141,9 @@ window.PORTFOLIO_ITEMS = [
     "role": "3D Artist",
     "vid": "https://framerusercontent.com/assets/D2ClrMCVzMAvCXNHR3Go7obANjQ.mp4",
     "desc": "Short 2D/3D animation project for Polimedia.",
-    "youtube": "https://youtu.be/mRFGpTaDG34"
+    "youtube": "https://youtu.be/mRFGpTaDG34",
+    "client": "Polimedia",
+    "software": "maya, blender, after_effects"
   },
   {
     "id": "rigid-body",
@@ -132,7 +155,9 @@ window.PORTFOLIO_ITEMS = [
     "role": "3D Artist",
     "vid": "https://framerusercontent.com/assets/RKclWjZkdQRRQiJKSM5CPFZZOMM.mp4",
     "desc": "Rigid body simulation and texturing in Autodesk Maya.",
-    "youtube": "https://youtu.be/dZyIAHOZef0"
+    "youtube": "https://youtu.be/dZyIAHOZef0",
+    "client": "Polimedia",
+    "software": "maya, blender"
   },
   {
     "id": "windmill",
@@ -143,7 +168,9 @@ window.PORTFOLIO_ITEMS = [
     "year": "2024",
     "role": "3D Artist",
     "vid": "https://framerusercontent.com/assets/s1FKfEjlCpWgZfPid5Qw6KaY.mp4",
-    "desc": "3D windmill artwork."
+    "desc": "3D windmill artwork.",
+    "client": "Personal",
+    "software": "blender"
   },
   {
     "id": "adjuice",
@@ -154,7 +181,9 @@ window.PORTFOLIO_ITEMS = [
     "year": "2024",
     "role": "Motion Designer",
     "vid": "https://framerusercontent.com/assets/UyMTkzhIYR6KOcZL4WauavdM940.mp4",
-    "desc": "Social media motion graphics for Adjuice."
+    "desc": "Social media motion graphics for Adjuice.",
+    "client": "Adjuice",
+    "software": "after_effects, premiere_pro"
   },
   {
     "id": "videolearning",
@@ -165,7 +194,9 @@ window.PORTFOLIO_ITEMS = [
     "year": "2024",
     "role": "Motion Designer",
     "vid": "https://framerusercontent.com/assets/OML9YKq80RWEamXPQDaYw2GfTss.mp4",
-    "desc": "Video learning materials for Telkom CorpU."
+    "desc": "Video learning materials for Telkom CorpU.",
+    "client": "PT. Telekomunikasi Indonesia",
+    "software": "after_effects, premiere_pro"
   },
   {
     "id": "gizzi-susu",
@@ -176,7 +207,9 @@ window.PORTFOLIO_ITEMS = [
     "year": "2024",
     "role": "Motion Designer",
     "vid": "https://framerusercontent.com/assets/yQS73UK6MexGaktmfEkqPohP4X8.mp4",
-    "desc": "Motion graphics for Gizzi UHT."
+    "desc": "Motion graphics for Gizzi UHT.",
+    "client": "Dibilabs.Id",
+    "software": "after_effects, premiere_pro"
   },
   {
     "id": "hut-ri",
@@ -187,7 +220,9 @@ window.PORTFOLIO_ITEMS = [
     "year": "2024",
     "role": "Video Editor",
     "vid": "https://framerusercontent.com/assets/qfW0xlf9we7HDXhp0XjWPuBa3E.mp4",
-    "desc": "Video editing for Independence Day parade."
+    "desc": "Video editing for Independence Day parade.",
+    "client": "Freelance",
+    "software": "premiere_pro"
   },
   {
     "id": "3d-showreel",
@@ -199,7 +234,9 @@ window.PORTFOLIO_ITEMS = [
     "role": "3D Artist",
     "vid": "https://framerusercontent.com/assets/7SejrHjAR0gemdXw1c2EQ2NujQ.mp4",
     "desc": "Compilation of my 3D artwork.",
-    "youtube": "https://youtu.be/Sk_Uw_BpRTY"
+    "youtube": "https://youtu.be/Sk_Uw_BpRTY",
+    "client": "Personal",
+    "software": "blender, maya, after_effects"
   },
   {
     "id": "gita23rd",
@@ -210,7 +247,9 @@ window.PORTFOLIO_ITEMS = [
     "year": "2024",
     "role": "Video Editor",
     "vid": "https://framerusercontent.com/assets/XqAmC8E5WacMTftstK5DNlG2HP8.mp4",
-    "desc": "Fan video for JKT48 member."
+    "desc": "Fan video for JKT48 member.",
+    "client": "Freelance",
+    "software": "premiere_pro"
   },
   {
     "id": "aftermovie",
@@ -222,7 +261,9 @@ window.PORTFOLIO_ITEMS = [
     "role": "Video Editor",
     "vid": "https://framerusercontent.com/assets/hGTnvE3DoTPNnjBMdtAmdiaToA4.mp4",
     "desc": "Documentation Aftermovie editing for Parade Otak Kanan 7.",
-    "youtube": "https://youtu.be/iIQyqquAgIg"
+    "youtube": "https://youtu.be/iIQyqquAgIg",
+    "client": "HIMA Animasi",
+    "software": "premiere_pro, after_effects"
   },
   {
     "id": "railways",
@@ -233,7 +274,9 @@ window.PORTFOLIO_ITEMS = [
     "year": "2023",
     "role": "Colorist",
     "vid": "https://framerusercontent.com/assets/cwES02aAV0MPRlhO1y2bXF5rs.mp4",
-    "desc": "Color grading experiment with Davinci Resolve."
+    "desc": "Color grading experiment with Davinci Resolve.",
+    "client": "Personal",
+    "software": "davinci_resolve"
   },
   {
     "id": "axa-tm",
@@ -244,7 +287,9 @@ window.PORTFOLIO_ITEMS = [
     "year": "2023",
     "role": "Motion Designer",
     "vid": "https://framerusercontent.com/assets/NVedGjtN0Jug9NBkDKGaAp4YEs.mp4",
-    "desc": "Opening video for telemarketing motivational event."
+    "desc": "Opening video for telemarketing motivational event.",
+    "client": "AXA Mandiri",
+    "software": "after_effects"
   },
   {
     "id": "showreel-edit",
@@ -256,7 +301,9 @@ window.PORTFOLIO_ITEMS = [
     "role": "Motion Designer / Video Editor",
     "vid": "https://framerusercontent.com/assets/QkC1RcqN2rogPpOggxw7rHhwFUA.mp4",
     "desc": "Video editing and motion graphics showreel.",
-    "youtube": "https://youtu.be/xMXOH_fMANg"
+    "youtube": "https://youtu.be/xMXOH_fMANg",
+    "client": "Personal",
+    "software": "after_effects, premiere_pro"
   },
   {
     "id": "bts-photo",
@@ -268,6 +315,8 @@ window.PORTFOLIO_ITEMS = [
     "role": "Video Editor",
     "vid": "https://framerusercontent.com/assets/QRcUQSCGpzMaL1IapHhJ7cU44.mp4",
     "desc": "Behind the scenes photoshoot documentation.",
-    "youtube": "https://youtu.be/M4-RdMb5Jg4"
+    "youtube": "https://youtu.be/M4-RdMb5Jg4",
+    "client": "Personal",
+    "software": "premiere_pro"
   }
 ];
