@@ -97,13 +97,18 @@
     }
     .proj-sidebar > h2 { display: none; }
     .proj-wrapper { display: block !important; padding-bottom: 80px; }
-    .reel-slide { height: auto !important; width: 100% !important; aspect-ratio: 16/9 !important; margin-bottom: 0 !important; }
-    .reel-slide-text-below { display: flex !important; flex-direction: column; gap: 6px; padding: 12px 4px 28px; }
+    .reel-slide { height: auto !important; width: 100% !important; aspect-ratio: 4/3 !important; margin-bottom: 0 !important; }
+    .reel-slide-text-below { display: flex !important; flex-direction: row; align-items: flex-start; gap: 0; padding: 12px 0 28px; justify-content: space-between; }
+    .reel-slide-text-below .stb-left { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
     .reel-slide-text-below .stb-category { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.35em; color: rgba(255,255,255,0.45); }
-    .reel-slide-text-below .stb-title { font-size: clamp(1.1rem, 4vw, 1.6rem); font-weight: 800; text-transform: uppercase; letter-spacing: -0.03em; color: #f6efe2; line-height: 1; }
-    .reel-slide-text-below .stb-role { font-size: 10px; font-weight: 600; letter-spacing: 0.25em; color: rgba(255,255,255,0.35); text-transform: uppercase; }
+    .reel-slide-text-below .stb-title { font-size: clamp(1.1rem, 4.5vw, 1.6rem); font-weight: 800; text-transform: uppercase; letter-spacing: -0.03em; color: #f6efe2; line-height: 1.05; }
+    .reel-slide-text-below .stb-role { font-size: 10px; font-weight: 600; letter-spacing: 0.2em; color: rgba(255,255,255,0.35); text-transform: uppercase; margin-top: 2px; }
+    .reel-slide-text-below .stb-explore { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); color: #fff; font-size: 14px; margin-top: 4px; }
     .reel-slide .slide-overlay-content { display: none !important; }
+    .reel-number { display: none !important; }
+    .reel-indicator-num { display: none !important; }
     .film-border { display: none !important; }
+    .reel-track-mobile { padding-left: 16px !important; padding-right: 50px !important; }
     .modal-panel { width: 90% !important; right: 5% !important; left: 5% !important; padding: 30px 20px !important; }
     .modal-panel h2 { font-size: clamp(1.6rem, 5vw, 2.2rem) !important; }
     .modal-panel p { font-size: 0.9rem !important; line-height: 1.6 !important; }
@@ -453,7 +458,7 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
       <svg style={{ position: "absolute", width: 0, height: 0, overflow: "hidden" }} aria-hidden>
         <defs><filter id="crbl" x="-5%" y="-25%" width="110%" height="150%"><feGaussianBlur in="SourceGraphic" stdDeviation="0 0" /></filter></defs>
       </svg>
-      <div ref={trackRef} style={{ position: "absolute", inset: 0, top: 0, willChange: "transform", paddingLeft: "clamp(16px,7.5%,80px)", paddingRight: "clamp(16px,7.5%,80px)" }}>
+      <div ref={trackRef} className="reel-track-mobile" style={{ position: "absolute", inset: 0, top: 0, willChange: "transform", paddingLeft: "clamp(16px,7.5%,80px)", paddingRight: "clamp(16px,7.5%,80px)" }}>
         <div className="film-border" style={{ position: 'absolute', top: -5000, bottom: -5000, left: 0, width: 'clamp(30px, 6vw, 70px)', background: 'rgba(255,255,255,0.035)', WebkitMaskImage: `url("data:image/svg+xml;utf8,<svg width='60' height='80' viewBox='0 0 60 80' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' clip-rule='evenodd' d='M0 0H60V80H0V0ZM20 20C20 17 22 15 25 15H35C38 15 40 17 40 20V60C40 63 38 65 35 65H25C22 65 20 63 20 60V20Z' fill='black'/></svg>")`, WebkitMaskRepeat: 'repeat-y', WebkitMaskSize: '100% clamp(40px, 8vw, 80px)', pointerEvents: 'none', zIndex: 0 }} />
         <div className="film-border" style={{ position: 'absolute', top: -5000, bottom: -5000, right: 0, width: 'clamp(30px, 6vw, 70px)', background: 'rgba(255,255,255,0.035)', WebkitMaskImage: `url("data:image/svg+xml;utf8,<svg width='60' height='80' viewBox='0 0 60 80' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' clip-rule='evenodd' d='M0 0H60V80H0V0ZM20 20C20 17 22 15 25 15H35C38 15 40 17 40 20V60C40 63 38 65 35 65H25C22 65 20 63 20 60V20Z' fill='black'/></svg>")`, WebkitMaskRepeat: 'repeat-y', WebkitMaskSize: '100% clamp(40px, 8vw, 80px)', pointerEvents: 'none', zIndex: 0 }} />
         {slides.map((slide, i) => {
@@ -468,7 +473,7 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
                     <img src={slide.img} loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.8 }} />
                   ) : null}
                   <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg,rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.1) 25%,rgba(0,0,0,0.1) 65%,rgba(0,0,0,0.85) 100%)" }} />
-                  <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", fontSize: "clamp(120px,25vw,280px)", fontWeight: 800, color: "rgba(255,255,255,0.03)", letterSpacing: "-0.05em", lineHeight: 1 }}>{String(i + 1).padStart(2, "0")}</div>
+                  <div className="reel-number" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", fontSize: "clamp(120px,25vw,280px)", fontWeight: 800, color: "rgba(255,255,255,0.03)", letterSpacing: "-0.05em", lineHeight: 1 }}>{String(i + 1).padStart(2, "0")}</div>
                 </div>
                 <div ref={el => contentRefs.current[i] = el} className="slide-overlay-content" style={{ position: "absolute", inset: 0, willChange: "opacity,filter,transform", opacity: 0, filter: "blur(16px)" }}>
                   <SlideContent slide={slide} withModal={withModal} onExplore={handleExplore} />
@@ -476,9 +481,12 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
               </div>
               {/* Mobile: text extracted below the slide */}
               <div className="reel-slide-text-below" onClick={() => handleExplore(slide)} style={{ cursor: 'pointer' }}>
-                <div className="stb-category">{slide.category}</div>
-                <div className="stb-title">{slide.title}</div>
-                {withModal && <div className="stb-role">{slide.role} · {slide.year}</div>}
+                <div className="stb-left">
+                  <div className="stb-category">{slide.category}</div>
+                  <div className="stb-title">{slide.title}</div>
+                  {withModal && <div className="stb-role">{slide.role} · {slide.year}</div>}
+                </div>
+                <div className="stb-explore">→</div>
               </div>
             </div>
           )
@@ -487,7 +495,7 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
 
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 30, background: 'linear-gradient(180deg, #0a0908 0%, transparent 15%, transparent 85%, #0a0908 100%)' }} />
       <div style={{ position: "absolute", right: "clamp(4px,1.5%,20px)", top: "50%", transform: "translateY(-50%)", zIndex: 40, display: "flex", flexDirection: "column", alignItems: "center", gap: 10, opacity: openSlide ? 0 : 1, transition: "opacity 400ms", background: 'radial-gradient(ellipse at center, rgba(10,9,8,0.95) 0%, rgba(10,9,8,0.8) 40%, rgba(10,9,8,0) 70%)', padding: '40px 20px', borderRadius: 999 }}>
-        <div style={{ fontStyle: "italic", fontSize: 12, color: "rgba(255,255,255,0.55)" }}>{String(activeIdx + 1).padStart(2, "0")}</div>
+        <div className="reel-indicator-num" style={{ fontStyle: "italic", fontSize: 12, color: "rgba(255,255,255,0.55)" }}>{String(activeIdx + 1).padStart(2, "0")}</div>
         <div data-nodrag style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
           {Array.from({ length: N }).map((_, i) => (
             <button key={i} data-nodrag onClick={e => { e.stopPropagation(); setIdx(i); }} style={{ width: 20, height: 20, display: "flex", alignItems: "center", justifyContent: "center", background: "none", border: "none", cursor: "pointer", padding: 0 }}>
@@ -495,7 +503,7 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
             </button>
           ))}
         </div>
-        <div style={{ fontStyle: "italic", fontSize: 12, color: "rgba(255,255,255,0.3)" }}>{String(N).padStart(2, "0")}</div>
+        <div className="reel-indicator-num" style={{ fontStyle: "italic", fontSize: 12, color: "rgba(255,255,255,0.3)" }}>{String(N).padStart(2, "0")}</div>
       </div>
 
       {withModal && (
