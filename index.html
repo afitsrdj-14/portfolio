@@ -51,6 +51,20 @@
     0% { opacity: 0; transform: translateY(30px); }
     100% { opacity: 1; transform: translateY(0); }
   }
+  /* ── Shimmer placeholder for lazy-loaded videos ── */
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .video-shimmer {
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(255,255,255,0.02) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.02) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s ease-in-out infinite;
+    border-radius: inherit;
+    z-index: 1;
+    transition: opacity 0.5s ease;
+  }
   .hero-content {
     animation: fadeInUp 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     animation-delay: 2s;
@@ -66,6 +80,7 @@
   .proj-sidebar { width: 340px; flex-direction: column; height: 100vh; border-right: 1px solid rgba(255,255,255,0.05); padding: 120px 40px 40px; }
   .proj-wrapper { flex-direction: row; }
   .reel-slide { height: 80%; margin-bottom: 5%; }
+  .reel-slide-text-below { display: none; }
   
   .nav-links { display: flex; gap: 28px; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
   .nav-hamburger { display: none; background: none; border: none; color: white; cursor: pointer; padding: 4px; }
@@ -82,8 +97,16 @@
     }
     .proj-sidebar > h2 { display: none; }
     .proj-wrapper { display: block !important; padding-bottom: 80px; }
-    .reel-slide { height: auto !important; width: 100% !important; aspect-ratio: 1/1 !important; margin-bottom: 5vh !important; }
-    .modal-panel { width: 90% !important; right: 5% !important; left: 5% !important; padding: 40px 20px !important; }
+    .reel-slide { height: auto !important; width: 100% !important; aspect-ratio: 16/9 !important; margin-bottom: 0 !important; }
+    .reel-slide-text-below { display: flex !important; flex-direction: column; gap: 6px; padding: 12px 4px 28px; }
+    .reel-slide-text-below .stb-category { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.35em; color: rgba(255,255,255,0.45); }
+    .reel-slide-text-below .stb-title { font-size: clamp(1.1rem, 4vw, 1.6rem); font-weight: 800; text-transform: uppercase; letter-spacing: -0.03em; color: #f6efe2; line-height: 1; }
+    .reel-slide-text-below .stb-role { font-size: 10px; font-weight: 600; letter-spacing: 0.25em; color: rgba(255,255,255,0.35); text-transform: uppercase; }
+    .reel-slide .slide-overlay-content { display: none !important; }
+    .film-border { display: none !important; }
+    .modal-panel { width: 90% !important; right: 5% !important; left: 5% !important; padding: 30px 20px !important; }
+    .modal-panel h2 { font-size: clamp(1.6rem, 5vw, 2.2rem) !important; }
+    .modal-panel p { font-size: 0.9rem !important; line-height: 1.6 !important; }
     .explore-btn-area { width: 100% !important; bottom: 0 !important; top: auto !important; height: 35% !important; align-items: flex-end !important; }
     .explore-btn-area button { padding: 10px 16px !important; font-size: 9px !important; }
     
@@ -140,7 +163,72 @@
 <div id="root"></div>
 
 <script type="text/babel" data-presets="react-classic">
-const { useState, useRef, useEffect, useCallback } = React;
+const { useState, useRef, useEffect, useCallback, useMemo } = React;
+
+/* ─── LazyVideo Component ──────────────────────────────────────── */
+/* Uses IntersectionObserver to lazy-load video src only when the
+   element scrolls into view. Shows a shimmer placeholder until the
+   video can play. Pauses and unloads when out of viewport. */
+function LazyVideo({ src, style, className, autoPlay = true, loop = true, muted = true, playsInline = true, ...rest }) {
+  const videoRef = useRef(null);
+  const wrapperRef = useRef(null);
+  const [loaded, setLoaded] = useState(false);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el || !src) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+      },
+      { threshold: 0.15, rootMargin: '200px 0px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [src]);
+
+  // Set/unset src based on viewport visibility
+  useEffect(() => {
+    const vid = videoRef.current;
+    if (!vid || !src) return;
+
+    if (inView) {
+      if (!vid.src || vid.src !== src) {
+        vid.src = src;
+        vid.load();
+      }
+      vid.play().catch(() => {});
+    } else {
+      vid.pause();
+    }
+  }, [inView, src]);
+
+  const handleCanPlay = () => setLoaded(true);
+
+  // Reset loaded state when src changes
+  useEffect(() => { setLoaded(false); }, [src]);
+
+  if (!src) return null;
+
+  return (
+    <div ref={wrapperRef} className={className} style={{ position: 'relative', ...style }}>
+      {/* Shimmer placeholder — fades out once video is playable */}
+      <div className="video-shimmer" style={{ opacity: loaded ? 0 : 1, pointerEvents: 'none' }} />
+      <video
+        ref={videoRef}
+        onCanPlay={handleCanPlay}
+        autoPlay={autoPlay}
+        loop={loop}
+        muted={muted}
+        playsInline={playsInline}
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: loaded ? 1 : 0, transition: 'opacity 0.6s ease' }}
+        {...rest}
+      />
+    </div>
+  );
+}
 
 /* ─── Data ─────────────────────────────────────────────────────── */
 const HOME_SLIDES = window.HOME_SLIDES;
@@ -366,25 +454,31 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
         <defs><filter id="crbl" x="-5%" y="-25%" width="110%" height="150%"><feGaussianBlur in="SourceGraphic" stdDeviation="0 0" /></filter></defs>
       </svg>
       <div ref={trackRef} style={{ position: "absolute", inset: 0, top: 0, willChange: "transform", paddingLeft: "clamp(16px,7.5%,80px)", paddingRight: "clamp(16px,7.5%,80px)" }}>
-        <div style={{ position: 'absolute', top: -5000, bottom: -5000, left: 0, width: 'clamp(30px, 6vw, 70px)', background: 'rgba(255,255,255,0.035)', WebkitMaskImage: `url("data:image/svg+xml;utf8,<svg width='60' height='80' viewBox='0 0 60 80' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' clip-rule='evenodd' d='M0 0H60V80H0V0ZM20 20C20 17 22 15 25 15H35C38 15 40 17 40 20V60C40 63 38 65 35 65H25C22 65 20 63 20 60V20Z' fill='black'/></svg>")`, WebkitMaskRepeat: 'repeat-y', WebkitMaskSize: '100% clamp(40px, 8vw, 80px)', pointerEvents: 'none', zIndex: 0 }} />
-        <div style={{ position: 'absolute', top: -5000, bottom: -5000, right: 0, width: 'clamp(30px, 6vw, 70px)', background: 'rgba(255,255,255,0.035)', WebkitMaskImage: `url("data:image/svg+xml;utf8,<svg width='60' height='80' viewBox='0 0 60 80' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' clip-rule='evenodd' d='M0 0H60V80H0V0ZM20 20C20 17 22 15 25 15H35C38 15 40 17 40 20V60C40 63 38 65 35 65H25C22 65 20 63 20 60V20Z' fill='black'/></svg>")`, WebkitMaskRepeat: 'repeat-y', WebkitMaskSize: '100% clamp(40px, 8vw, 80px)', pointerEvents: 'none', zIndex: 0 }} />
+        <div className="film-border" style={{ position: 'absolute', top: -5000, bottom: -5000, left: 0, width: 'clamp(30px, 6vw, 70px)', background: 'rgba(255,255,255,0.035)', WebkitMaskImage: `url("data:image/svg+xml;utf8,<svg width='60' height='80' viewBox='0 0 60 80' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' clip-rule='evenodd' d='M0 0H60V80H0V0ZM20 20C20 17 22 15 25 15H35C38 15 40 17 40 20V60C40 63 38 65 35 65H25C22 65 20 63 20 60V20Z' fill='black'/></svg>")`, WebkitMaskRepeat: 'repeat-y', WebkitMaskSize: '100% clamp(40px, 8vw, 80px)', pointerEvents: 'none', zIndex: 0 }} />
+        <div className="film-border" style={{ position: 'absolute', top: -5000, bottom: -5000, right: 0, width: 'clamp(30px, 6vw, 70px)', background: 'rgba(255,255,255,0.035)', WebkitMaskImage: `url("data:image/svg+xml;utf8,<svg width='60' height='80' viewBox='0 0 60 80' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' clip-rule='evenodd' d='M0 0H60V80H0V0ZM20 20C20 17 22 15 25 15H35C38 15 40 17 40 20V60C40 63 38 65 35 65H25C22 65 20 63 20 60V20Z' fill='black'/></svg>")`, WebkitMaskRepeat: 'repeat-y', WebkitMaskSize: '100% clamp(40px, 8vw, 80px)', pointerEvents: 'none', zIndex: 0 }} />
         {slides.map((slide, i) => {
           const isOpen = openSlide?.id === slide.id;
           return (
             <div key={slide.id} className="reel-slide" ref={el => outerRefs.current[i] = el} style={{ position: "relative", width: "100%", perspective: "2000px", opacity: 0 }}>
-              <div style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden", borderRadius: 40, transformOrigin: "0% 50%", transformStyle: "preserve-3d", transform: isOpen ? "rotateY(12deg)" : "rotateY(0deg)", transition: "all 700ms cubic-bezier(0.22,1,0.36,1)" }}>
+              <div style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden", borderRadius: 'clamp(16px, 4vw, 40px)', transformOrigin: "0% 50%", transformStyle: "preserve-3d", transform: isOpen ? "rotateY(12deg)" : "rotateY(0deg)", transition: "all 700ms cubic-bezier(0.22,1,0.36,1)" }}>
                 <div ref={el => imgRefs.current[i] = el} style={{ position: "absolute", top: "50%", left: "50%", width: "100vw", height: "120dvh", marginTop: "-60dvh", marginLeft: "-50vw", willChange: "transform", background: slide.gradient || "#050505" }}>
                   {slide.vid ? (
-                    <video src={slide.vid} autoPlay loop muted playsInline style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.8 }} />
+                    <LazyVideo src={slide.vid} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: 0.8 }} />
                   ) : slide.img ? (
-                    <img src={slide.img} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.8 }} />
+                    <img src={slide.img} loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.8 }} />
                   ) : null}
                   <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg,rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.1) 25%,rgba(0,0,0,0.1) 65%,rgba(0,0,0,0.85) 100%)" }} />
                   <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", fontSize: "clamp(120px,25vw,280px)", fontWeight: 800, color: "rgba(255,255,255,0.03)", letterSpacing: "-0.05em", lineHeight: 1 }}>{String(i + 1).padStart(2, "0")}</div>
                 </div>
-                <div ref={el => contentRefs.current[i] = el} style={{ position: "absolute", inset: 0, willChange: "opacity,filter,transform", opacity: 0, filter: "blur(16px)" }}>
+                <div ref={el => contentRefs.current[i] = el} className="slide-overlay-content" style={{ position: "absolute", inset: 0, willChange: "opacity,filter,transform", opacity: 0, filter: "blur(16px)" }}>
                   <SlideContent slide={slide} withModal={withModal} onExplore={handleExplore} />
                 </div>
+              </div>
+              {/* Mobile: text extracted below the slide */}
+              <div className="reel-slide-text-below" onClick={() => handleExplore(slide)} style={{ cursor: 'pointer' }}>
+                <div className="stb-category">{slide.category}</div>
+                <div className="stb-title">{slide.title}</div>
+                {withModal && <div className="stb-role">{slide.role} · {slide.year}</div>}
               </div>
             </div>
           )
@@ -409,13 +503,13 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
           <div data-nodrag onClick={() => setOpenSlide(null)} style={{ position: "absolute", zIndex: 40, top: "10%", height: "80%", left: "clamp(16px,7.5%,80px)", right: "clamp(16px,7.5%,80px)", borderRadius: 40, backgroundColor: openSlide ? "rgba(10,9,8,0.4)" : "rgba(10,9,8,0)", backdropFilter: openSlide ? "blur(14px)" : "blur(0px)", pointerEvents: openSlide ? "auto" : "none", transition: "all 600ms" }} />
           <aside data-nodrag className="modal-panel" style={{ position: "absolute", zIndex: 50, top: "10%", height: "80%", right: "clamp(16px,7.5%,80px)", width: "min(600px, 52%)", borderRadius: 40, overflow: "hidden", color: "white", background: "linear-gradient(180deg,rgba(15,12,12,0.92) 0%,rgba(10,9,8,0.95) 100%)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.08)", transform: openSlide ? "translateX(0)" : "translateX(150%)", transition: "all 700ms cubic-bezier(0.22,1,0.36,1)", boxShadow: openSlide ? "-30px 0 80px -20px rgba(0,0,0,0.7)" : "none" }}>
             {openSlide && (
-              <div style={{ height: "100%", width: "100%", overflowY: "auto", padding: "60px 40px" }}>
-                <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.3em', opacity: 0.5, marginBottom: 15 }}>{openSlide.category}</div>
-                <h2 style={{ fontSize: 'clamp(2.5rem, 4vw, 4rem)', fontWeight: 800, marginBottom: 20, lineHeight: 1 }}>{openSlide.title}</h2>
-                <div style={{ fontSize: 14, opacity: 0.8, marginBottom: 40 }}>{openSlide.role}</div>
-                <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 40 }}></div>
-                <p style={{ fontSize: '1.1rem', lineHeight: 1.8, opacity: 0.8, marginBottom: 40 }}>{openSlide.desc}</p>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 40, borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '20px 0' }}>
+              <div style={{ height: "100%", width: "100%", overflowY: "auto", padding: "clamp(30px, 5vw, 60px) clamp(20px, 4vw, 40px)" }}>
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', opacity: 0.5, marginBottom: 12 }}>{openSlide.category}</div>
+                <h2 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 3.5rem)', fontWeight: 800, marginBottom: 14, lineHeight: 1.05 }}>{openSlide.title}</h2>
+                <div style={{ fontSize: 13, opacity: 0.8, marginBottom: 24 }}>{openSlide.role}</div>
+                <div style={{ height: 1, background: 'rgba(255,255,255,0.1)', marginBottom: 24 }}></div>
+                <p style={{ fontSize: 'clamp(0.85rem, 2vw, 1.05rem)', lineHeight: 1.65, opacity: 0.8, marginBottom: 24 }}>{openSlide.desc}</p>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24, borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '16px 0' }}>
                   <div>
                     <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.4)', marginBottom: 6 }}>Client / Company</div>
                     <div style={{ fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.95)' }}>{openSlide.client || "Personal Project"}</div>
@@ -429,7 +523,7 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
                   const keys = openSlide.software.split(',').map(s => s.trim()).filter(Boolean);
                   if (keys.length === 0) return null;
                   return (
-                    <div style={{ marginBottom: 40 }}>
+                    <div style={{ marginBottom: 24 }}>
                       <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.4)', marginBottom: 12 }}>Software Used</div>
                       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                         {keys.map(key => {
@@ -451,7 +545,7 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
                   if (openSlide.linkPlatform === 'instagram') { btnColor = '#E1306C'; icon = Icons.instagram; label = 'View on Instagram'; }
                   else if (openSlide.linkPlatform === 'drive') { btnColor = '#4285F4'; icon = Icons.drive; label = 'View on Google Drive'; }
                   return (
-                    <a href={openSlide.youtube} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: btnColor, color: '#fff', padding: '12px 24px', borderRadius: 999, textDecoration: 'none', fontWeight: 700, fontSize: 14, marginBottom: 40 }}>
+                    <a href={openSlide.youtube} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: btnColor, color: '#fff', padding: '10px 20px', borderRadius: 999, textDecoration: 'none', fontWeight: 700, fontSize: 13, marginBottom: 24 }}>
                       <span style={{ transform: 'scale(0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{icon}</span>
                       {label}
                     </a>
@@ -568,11 +662,10 @@ function Hero() {
   return (
     <section style={{ position: 'relative', height: '100vh', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
       {/* Replace src with your video URL when ready */}
-      <video 
+      <LazyVideo 
         className="hero-video"
         src="https://media.afitsrdj.com/VFX_Showreel%20Web_1.mp4" 
-        autoPlay loop muted playsInline
-        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.6, zIndex: 0, WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 60%, transparent 100%)', maskImage: 'linear-gradient(to bottom, black 0%, black 60%, transparent 100%)' }}
+        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0, WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 60%, transparent 100%)', maskImage: 'linear-gradient(to bottom, black 0%, black 60%, transparent 100%)' }}
       />
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at center, rgba(10,9,8,0.3) 0%, #0a0908 90%)', zIndex: 1 }} />
       
