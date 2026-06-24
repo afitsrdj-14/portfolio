@@ -39,10 +39,16 @@ window.ABOUT_DATA = {
   ],
   "projectExperience": [
     {
+      "year": "2025",
+      "title": "K-Pop Music Video",
+      "company": "Blezzpost Studio",
+      "type": "VFX Artist"
+    },
+    {
       "year": "2024",
-      "title": "College CGI Animation Short",
-      "company": "Polimedia",
-      "type": "Project Lead"
+      "title": "College 3D Animation Short",
+      "company": "Politeknik Negeri Media Kreatif Jakarta",
+      "type": "Project Lead, 3D Animator, FX Artist"
     }
   ]
 };
@@ -109,11 +115,12 @@ window.PORTFOLIO_ITEMS = [
     "desc": "",
     "youtube": "https://youtu.be/nNjabw6ybnQ?si=CxyzwiaVLN8ErpbV",
     "client": "Blezzpost Studio",
-    "software": "after_effects"
+    "software": "after_effects",
+    "date": "2026-07-21"
   },
   {
     "id": "new-project",
-    "type": "motion, vfx",
+    "type": "vfx",
     "eyebrow": "BLEZZPOST STUDIO",
     "category": "MOTION",
     "title": "Xodiac - Alibi",
@@ -124,7 +131,8 @@ window.PORTFOLIO_ITEMS = [
     "desc": "",
     "youtube": "https://youtu.be/4qdoevwJnOE?si=dtg2o0XlcaVlrUHD",
     "client": "Blezzpost Studio",
-    "software": "after_effects"
+    "software": "after_effects",
+    "date": "2026-06-18"
   },
   {
     "id": "new-project",
@@ -139,7 +147,8 @@ window.PORTFOLIO_ITEMS = [
     "desc": "",
     "youtube": "https://youtu.be/sBx08M4cDME?si=BrcI2okKopzSgqrM",
     "software": "after_effects, mocha",
-    "client": "Blezzpost Studio"
+    "client": "Blezzpost Studio",
+    "date": "2026-05-15"
   },
   {
     "id": "new-project",
@@ -154,11 +163,12 @@ window.PORTFOLIO_ITEMS = [
     "desc": "",
     "youtube": "https://youtu.be/ekQrIXjp2oA?si=XtJQzC7XtIE1Ozst",
     "client": "Blezzpost Studio",
-    "software": "after_effects, mocha, blender"
+    "software": "after_effects, mocha, blender",
+    "date": "2026-04-12"
   },
   {
     "id": "new-project",
-    "type": "motion",
+    "type": "motion, 3d",
     "eyebrow": "SAMIR",
     "category": "MOTION",
     "title": " Kenali Jenis Utang Biar Dompet Nggak Tumbang!",
@@ -169,11 +179,12 @@ window.PORTFOLIO_ITEMS = [
     "desc": "",
     "youtube": "https://youtu.be/oYIk0hBSKSI?si=a6HjrY5Ifgkb1uOJ",
     "client": "SAMIR",
-    "software": "blender, after_effects"
+    "software": "blender, after_effects",
+    "date": "2026-03-09"
   },
   {
     "id": "skor-kredit-ami",
-    "type": "motion",
+    "type": "motion, 3d",
     "eyebrow": "SAMIR",
     "category": "MOTION",
     "title": "Skor Kredit AMI",
@@ -184,7 +195,8 @@ window.PORTFOLIO_ITEMS = [
     "youtube": "https://youtu.be/RtNPeFRNIqc",
     "client": "SAMIR",
     "software": "after_effects, premiere_pro, blender",
-    "vid": "https://youtu.be/RtNPeFRNIqc?si=__dp3TJ6vxO-UlVd"
+    "vid": "https://youtu.be/RtNPeFRNIqc?si=__dp3TJ6vxO-UlVd",
+    "date": "2026-02-06"
   },
   {
     "id": "videotron-samir",
@@ -198,7 +210,8 @@ window.PORTFOLIO_ITEMS = [
     "desc": "Videotron campaign for SAMIR.",
     "youtube": "https://youtu.be/xPB954pmRFw",
     "client": "SAMIR",
-    "software": "after_effects"
+    "software": "after_effects",
+    "date": "2026-01-03"
   },
   {
     "id": "motion-reel",
@@ -212,7 +225,8 @@ window.PORTFOLIO_ITEMS = [
     "desc": "Personal motion graphics showreel.",
     "youtube": "https://youtu.be/w0Sxz2GFe44",
     "client": "Personal",
-    "software": "after_effects"
+    "software": "after_effects",
+    "date": "2025-02-06"
   },
   {
     "id": "catjipiti",
@@ -225,7 +239,8 @@ window.PORTFOLIO_ITEMS = [
     "vid": "https://framerusercontent.com/assets/CbkkKnTXQZc7I359a6NR4Be2aRo.mp4",
     "desc": "Social media feeds design and motion for AXA Mandiri.",
     "client": "AXA Mandiri",
-    "software": "after_effects, photoshop"
+    "software": "after_effects, photoshop",
+    "date": "2023-04-12"
   },
   {
     "id": "djavu",
@@ -238,7 +253,8 @@ window.PORTFOLIO_ITEMS = [
     "vid": "https://framerusercontent.com/assets/jpCkaZu8r5RzCXoYngvhO8OBOU.mp4",
     "desc": "Logo motion design for DJAVU Creative.",
     "client": "Personal",
-    "software": "after_effects"
+    "software": "after_effects",
+    "date": "2024-10-28"
   },
   {
     "id": "hang-tuah",
@@ -252,7 +268,8 @@ window.PORTFOLIO_ITEMS = [
     "desc": "Short 2D/3D animation project for Polimedia.",
     "youtube": "https://youtu.be/mRFGpTaDG34",
     "client": "Polimedia",
-    "software": "maya, blender, after_effects"
+    "software": "maya, blender, after_effects",
+    "date": "2025-01-03"
   },
   {
     "id": "rigid-body",
@@ -266,7 +283,8 @@ window.PORTFOLIO_ITEMS = [
     "desc": "Rigid body simulation and texturing in Autodesk Maya.",
     "youtube": "https://youtu.be/dZyIAHOZef0",
     "client": "Polimedia",
-    "software": "maya, blender"
+    "software": "maya, blender",
+    "date": "2024-09-27"
   },
   {
     "id": "windmill",
@@ -279,7 +297,8 @@ window.PORTFOLIO_ITEMS = [
     "vid": "https://framerusercontent.com/assets/s1FKfEjlCpWgZfPid5Qw6KaY.mp4",
     "desc": "3D windmill artwork.",
     "client": "Personal",
-    "software": "maya"
+    "software": "maya",
+    "date": "2024-08-24"
   },
   {
     "id": "adjuice",
@@ -292,7 +311,8 @@ window.PORTFOLIO_ITEMS = [
     "vid": "https://framerusercontent.com/assets/UyMTkzhIYR6KOcZL4WauavdM940.mp4",
     "desc": "Social media motion graphics for Adjuice.",
     "client": "Adjuice",
-    "software": "after_effects"
+    "software": "after_effects",
+    "date": "2024-07-21"
   },
   {
     "id": "videolearning",
@@ -305,7 +325,8 @@ window.PORTFOLIO_ITEMS = [
     "vid": "https://framerusercontent.com/assets/OML9YKq80RWEamXPQDaYw2GfTss.mp4",
     "desc": "Video learning materials for Telkom CorpU.",
     "client": "PT. Telekomunikasi Indonesia",
-    "software": "after_effects, premiere_pro"
+    "software": "after_effects, premiere_pro",
+    "date": "2024-06-18"
   },
   {
     "id": "gizzi-susu",
@@ -318,7 +339,8 @@ window.PORTFOLIO_ITEMS = [
     "vid": "https://framerusercontent.com/assets/yQS73UK6MexGaktmfEkqPohP4X8.mp4",
     "desc": "Motion graphics for Gizzi UHT.",
     "client": "Dibilabs.Id",
-    "software": "after_effects"
+    "software": "after_effects",
+    "date": "2024-05-15"
   },
   {
     "id": "hut-ri",
@@ -331,7 +353,8 @@ window.PORTFOLIO_ITEMS = [
     "vid": "https://framerusercontent.com/assets/qfW0xlf9we7HDXhp0XjWPuBa3E.mp4",
     "desc": "Video editing for Independence Day parade.",
     "client": "Freelance",
-    "software": "davinci_resolve"
+    "software": "davinci_resolve",
+    "date": "2024-04-12"
   },
   {
     "id": "3d-showreel",
@@ -345,7 +368,8 @@ window.PORTFOLIO_ITEMS = [
     "desc": "Compilation of my 3D artwork.",
     "youtube": "https://youtu.be/Sk_Uw_BpRTY",
     "client": "Personal",
-    "software": "blender, maya, after_effects"
+    "software": "blender, maya, after_effects",
+    "date": "2024-03-09"
   },
   {
     "id": "gita23rd",
@@ -358,7 +382,8 @@ window.PORTFOLIO_ITEMS = [
     "vid": "https://framerusercontent.com/assets/XqAmC8E5WacMTftstK5DNlG2HP8.mp4",
     "desc": "Fan video for JKT48 member.",
     "client": "Freelance",
-    "software": "after_effects"
+    "software": "after_effects",
+    "date": "2024-02-06"
   },
   {
     "id": "aftermovie",
@@ -372,7 +397,8 @@ window.PORTFOLIO_ITEMS = [
     "desc": "Documentation Aftermovie editing for Parade Otak Kanan 7.",
     "youtube": "https://youtu.be/iIQyqquAgIg",
     "client": "HIMA Animasi",
-    "software": "premiere_pro, after_effects"
+    "software": "premiere_pro, after_effects",
+    "date": "2024-01-03"
   },
   {
     "id": "railways",
@@ -385,7 +411,8 @@ window.PORTFOLIO_ITEMS = [
     "vid": "https://framerusercontent.com/assets/cwES02aAV0MPRlhO1y2bXF5rs.mp4",
     "desc": "Color grading experiment with Davinci Resolve.",
     "client": "Personal",
-    "software": "davinci_resolve"
+    "software": "davinci_resolve",
+    "date": "2023-03-09"
   },
   {
     "id": "axa-tm",
@@ -398,7 +425,8 @@ window.PORTFOLIO_ITEMS = [
     "vid": "https://framerusercontent.com/assets/NVedGjtN0Jug9NBkDKGaAp4YEs.mp4",
     "desc": "Opening video for telemarketing motivational event.",
     "client": "AXA Mandiri",
-    "software": "after_effects"
+    "software": "after_effects",
+    "date": "2023-02-06"
   },
   {
     "id": "showreel-edit",
@@ -412,7 +440,8 @@ window.PORTFOLIO_ITEMS = [
     "desc": "Video editing and motion graphics showreel.",
     "youtube": "https://youtu.be/xMXOH_fMANg",
     "client": "Personal",
-    "software": "after_effects, premiere_pro"
+    "software": "after_effects, premiere_pro",
+    "date": "2023-01-03"
   },
   {
     "id": "bts-photo",
@@ -426,6 +455,7 @@ window.PORTFOLIO_ITEMS = [
     "desc": "Behind the scenes photoshoot documentation.",
     "youtube": "https://youtu.be/M4-RdMb5Jg4",
     "client": "Personal",
-    "software": "premiere_pro"
+    "software": "premiere_pro",
+    "date": "2022-01-03"
   }
 ];
