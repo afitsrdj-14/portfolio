@@ -116,7 +116,7 @@ window.PORTFOLIO_ITEMS = [
     "youtube": "https://youtu.be/oYIk0hBSKSI?si=a6HjrY5Ifgkb1uOJ",
     "client": "SAMIR",
     "software": "blender, after_effects",
-    "date": "2026-05-29"
+    "date": "2026-05-25"
   },
   {
     "id": "skor-kredit-ami",
@@ -143,12 +143,12 @@ window.PORTFOLIO_ITEMS = [
     "year": "2026",
     "role": "VFX Artist",
     "img": "",
-    "vid": "",
+    "vid": "https://media.afitsrdj.com/Preview%20H1KEY.mp4",
     "desc": "",
     "youtube": "https://youtu.be/sBx08M4cDME?si=BrcI2okKopzSgqrM",
     "software": "after_effects, mocha",
     "client": "Blezzpost Studio",
-    "date": "2026-01-30"
+    "date": "2026-01-31"
   },
   {
     "id": "videotron-samir",
@@ -174,12 +174,12 @@ window.PORTFOLIO_ITEMS = [
     "year": "2025",
     "role": "3D & VFX Artist",
     "img": "",
-    "vid": "",
+    "vid": "https://media.afitsrdj.com/Preview%20Waker(1).mp4",
     "desc": "",
     "youtube": "https://youtu.be/ekQrIXjp2oA?si=XtJQzC7XtIE1Ozst",
     "client": "Blezzpost Studio",
     "software": "after_effects, mocha, blender",
-    "date": "2025-12-12"
+    "date": "2025-12-24"
   },
   {
     "id": "new-project",
@@ -190,12 +190,12 @@ window.PORTFOLIO_ITEMS = [
     "year": "2025",
     "role": "VFX Artist",
     "img": "",
-    "vid": "",
+    "vid": "https://media.afitsrdj.com/Preview%20NTX.mp4",
     "desc": "",
     "youtube": "https://youtu.be/nNjabw6ybnQ?si=CxyzwiaVLN8ErpbV",
     "client": "Blezzpost Studio",
-    "software": "after_effects",
-    "date": "2025-11-21"
+    "software": "after_effects, blender",
+    "date": "2025-12-08"
   },
   {
     "id": "new-project",
@@ -206,12 +206,12 @@ window.PORTFOLIO_ITEMS = [
     "year": "2025",
     "role": "VFX Artist",
     "img": "",
-    "vid": "",
+    "vid": "https://media.afitsrdj.com/Preview%20Xodiac.mp4",
     "desc": "",
     "youtube": "https://youtu.be/4qdoevwJnOE?si=dtg2o0XlcaVlrUHD",
     "client": "Blezzpost Studio",
     "software": "after_effects",
-    "date": "2025-11-18"
+    "date": "2025-11-20"
   },
   {
     "id": "motion-reel",
