@@ -38,7 +38,8 @@ window.HOME_SLIDES = [
     "title": "VFX",
     "year": "2024",
     "role": "AFIT SURADIRADJA",
-    "gradient": "linear-gradient(135deg,#0d0720 0%,#16213e 45%,#1a3a5c 80%,#0a1628 100%)"
+    "gradient": "linear-gradient(135deg,#0d0720 0%,#16213e 45%,#1a3a5c 80%,#0a1628 100%)",
+    "vid": "https://media.afitsrdj.com/VFX_Showreel%20Web_1.mp4"
   },
   {
     "id": "3d",
@@ -48,7 +49,8 @@ window.HOME_SLIDES = [
     "title": "3D ART",
     "year": "2024",
     "role": "AFIT SURADIRADJA",
-    "gradient": "linear-gradient(160deg,#0a1a0d 0%,#1b4332 45%,#2d6a4f 80%,#081c15 100%)"
+    "gradient": "linear-gradient(160deg,#0a1a0d 0%,#1b4332 45%,#2d6a4f 80%,#081c15 100%)",
+    "vid": "https://media.afitsrdj.com/3D_Showreel%20Web_1.mp4"
   },
   {
     "id": "motion",
@@ -58,7 +60,8 @@ window.HOME_SLIDES = [
     "title": "MOTION GRAPHICS",
     "year": "2024",
     "role": "AFIT SURADIRADJA",
-    "gradient": "linear-gradient(120deg,#1c0800 0%,#3d1a00 45%,#6b3a2a 80%,#2c1408 100%)"
+    "gradient": "linear-gradient(120deg,#1c0800 0%,#3d1a00 45%,#6b3a2a 80%,#2c1408 100%)",
+    "vid": "https://media.afitsrdj.com/Motion_Web_1.mp4"
   }
 ];
 
