@@ -107,6 +107,7 @@
     .reel-slide .slide-overlay-content { display: none !important; }
     .reel-number { display: none !important; }
     .reel-indicator-num { display: none !important; }
+    .reel-indicators { display: none !important; }
     .film-border { display: none !important; }
     .reel-track-mobile { padding-left: 16px !important; padding-right: 50px !important; }
     .modal-panel { width: 90% !important; right: 5% !important; left: 5% !important; padding: 30px 20px !important; }
@@ -381,12 +382,34 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [openSlide, setOpenSlide] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
     const cb = () => setIsMobile(window.innerWidth <= 800);
     window.addEventListener('resize', cb);
     return () => window.removeEventListener('resize', cb);
   }, []);
+
+  useEffect(() => {
+    if (!withModal) return;
+    if (isSticky) {
+      const handleScroll = () => {
+        setShowBackToTop(window.scrollY > 300);
+      };
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    } else {
+      setShowBackToTop(activeIdx > 0);
+    }
+  }, [isSticky, activeIdx, withModal]);
+
+  const handleBackToTop = () => {
+    if (isSticky) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      setIdx(0);
+    }
+  };
 
   const layR = useRef(null);
 
@@ -443,7 +466,10 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
       const { pitch, slideH, vh } = layR.current, vc = vh / 2;
       for (let i = 0; i < TOTAL; i++) {
         const top = i * pitch + yR.current, sc = top + slideH / 2, dy = sc - vc, dn = Math.abs(dy) / slideH;
-        if (imgRefs.current[i]) imgRefs.current[i].style.transform = `translate3d(0,${(-dy / 1.2).toFixed(2)}px,0)`;
+        if (imgRefs.current[i]) {
+          const factor = window.innerWidth <= 800 ? 8.0 : 1.2;
+          imgRefs.current[i].style.transform = `translate3d(0,${(-dy / factor).toFixed(2)}px,0)`;
+        }
         const c = contentRefs.current[i]; if (!c) continue;
         if (dn > 2) { c.style.opacity = "0"; c.style.filter = "blur(16px)"; c.style.transform = ""; continue; }
         
@@ -511,10 +537,10 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
               <div style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden", borderRadius: 'clamp(16px, 4vw, 40px)', transformOrigin: "0% 50%", transformStyle: "preserve-3d", transform: isOpen ? "rotateY(12deg)" : "rotateY(0deg)", transition: "all 700ms cubic-bezier(0.22,1,0.36,1)" }}>
                 <div ref={el => imgRefs.current[i] = el} style={{ 
                   position: "absolute", 
-                  top: isMobile ? "0" : "50%", 
+                  top: isMobile ? "-15%" : "50%", 
                   left: isMobile ? "0" : "50%", 
                   width: isMobile ? "100%" : "100vw", 
-                  height: isMobile ? "100%" : "120dvh", 
+                  height: isMobile ? "130%" : "120dvh", 
                   marginTop: isMobile ? "0" : "-60dvh", 
                   marginLeft: isMobile ? "0" : "-50vw", 
                   willChange: "transform", 
@@ -552,7 +578,7 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
       </div>
 
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 30, background: 'linear-gradient(180deg, #0a0908 0%, transparent 15%, transparent 85%, #0a0908 100%)' }} />
-      <div style={{ position: "absolute", right: "clamp(4px,1.5%,20px)", top: "50%", transform: "translateY(-50%)", zIndex: 40, display: "flex", flexDirection: "column", alignItems: "center", gap: 10, opacity: openSlide ? 0 : 1, transition: "opacity 400ms", background: 'radial-gradient(ellipse at center, rgba(10,9,8,0.95) 0%, rgba(10,9,8,0.8) 40%, rgba(10,9,8,0) 70%)', padding: '40px 20px', borderRadius: 999 }}>
+      <div className="reel-indicators" style={{ position: "absolute", right: "clamp(4px,1.5%,20px)", top: "50%", transform: "translateY(-50%)", zIndex: 40, display: "flex", flexDirection: "column", alignItems: "center", gap: 10, opacity: openSlide ? 0 : 1, transition: "opacity 400ms", background: 'radial-gradient(ellipse at center, rgba(10,9,8,0.95) 0%, rgba(10,9,8,0.8) 40%, rgba(10,9,8,0) 70%)', padding: '40px 20px', borderRadius: 999 }}>
         <div className="reel-indicator-num" style={{ fontStyle: "italic", fontSize: 12, color: "rgba(255,255,255,0.55)" }}>{String(activeIdx + 1).padStart(2, "0")}</div>
         <div data-nodrag style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
           {Array.from({ length: N }).map((_, i) => (
@@ -626,19 +652,58 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
     </section>
   );
 
-  if (isSticky) {
-    return (
-      <div ref={wrapperRef} style={{ height: `${N * 100}vh`, position: 'relative', zIndex: 10 }}>
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', pointerEvents: 'none' }}>
-          {Array.from({ length: N }).map((_, i) => (
-            <div key={i} style={{ height: '100vh', scrollSnapAlign: 'start' }} />
-          ))}
+  const renderReel = () => {
+    if (isSticky) {
+      return (
+        <div ref={wrapperRef} style={{ height: `${N * 100}vh`, position: 'relative', zIndex: 10 }}>
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', pointerEvents: 'none' }}>
+            {Array.from({ length: N }).map((_, i) => (
+              <div key={i} style={{ height: '100vh', scrollSnapAlign: isMobile ? 'none' : 'start' }} />
+            ))}
+          </div>
+          {reelContent}
         </div>
-        {reelContent}
-      </div>
-    );
-  }
-  return reelContent;
+      );
+    }
+    return reelContent;
+  };
+
+  return (
+    <>
+      {renderReel()}
+      {withModal && showBackToTop && (
+        <button 
+          onClick={handleBackToTop}
+          style={{
+            position: 'fixed',
+            bottom: isMobile ? '96px' : '40px',
+            right: isMobile ? '20px' : '40px',
+            width: '48px',
+            height: '48px',
+            borderRadius: '50%',
+            background: 'rgba(15,15,15,0.85)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255,255,255,0.18)',
+            color: '#fff',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            transition: 'all 0.3s ease',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = '#000'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(15,15,15,0.85)'; e.currentTarget.style.color = '#fff'; }}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"></line>
+            <polyline points="5 12 12 5 19 12"></polyline>
+          </svg>
+        </button>
+      )}
+    </>
+  );
 }
 
 /* ─── Page Components ───────────────────────────────────────────── */
