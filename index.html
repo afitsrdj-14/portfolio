@@ -162,6 +162,22 @@
     width: max-content;
     animation: scrollLogos 30s linear infinite;
   }
+  .slide-title {
+    font-size: clamp(2rem, 5.5vw, 5.5rem);
+    line-height: 0.95;
+    max-height: 3.8em;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  @media (max-width: 1100px) {
+    .slide-title {
+      font-size: clamp(1.6rem, 4.5vw, 2.8rem) !important;
+      -webkit-line-clamp: 3;
+      max-height: 2.9em;
+    }
+  }
 </style>
 </head>
 <body>
@@ -199,15 +215,35 @@ function LazyVideo({ src, style, className, autoPlay = true, loop = true, muted 
     const vid = videoRef.current;
     if (!vid || !src) return;
 
+    let timer;
+    const isMobile = window.innerWidth <= 800;
+
     if (inView) {
       if (!vid.src || vid.src !== src) {
         vid.src = src;
         vid.load();
       }
-      vid.play().catch(() => {});
+      
+      if (isMobile) {
+        // Mobile delay: play only after staying for 2 seconds
+        timer = setTimeout(() => {
+          vid.play().catch(() => {});
+        }, 2000);
+      } else {
+        vid.play().catch(() => {});
+      }
     } else {
       vid.pause();
+      if (isMobile) {
+        // Mobile memory/bandwidth saver: flush buffer when out of viewport
+        vid.removeAttribute('src');
+        vid.load();
+      }
     }
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, [inView, src]);
 
   const handleCanPlay = () => setLoaded(true);
@@ -304,7 +340,7 @@ function SlideContent({ slide, withModal, onExplore }) {
       )}
       <div style={{ position: "absolute", left: pad, bottom: "9dvh", display: "flex", flexDirection: "column", gap: 14, pointerEvents: 'none', maxWidth: "calc(100% - 180px)" }}>
         <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.4em", color: "rgba(255,255,255,0.5)" }}>{slide.category}</div>
-        <h2 style={{ fontWeight: 800, textTransform: "uppercase", fontSize: "clamp(2rem,7vw,5.5rem)", lineHeight: 0.92, letterSpacing: "-0.04em", color: "#f6efe2", wordBreak: 'break-word', paddingRight: '10px' }}>{slide.title}</h2>
+        <h2 className="slide-title" style={{ fontWeight: 800, textTransform: "uppercase", letterSpacing: "-0.04em", color: "#f6efe2", wordBreak: 'break-word', paddingRight: '10px' }}>{slide.title}</h2>
         {withModal && (
           <div style={{ display: "flex", gap: 12, fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.3em" }}>
             <span style={{ color: "rgba(255,255,255,0.4)" }}>ROLE</span>
@@ -722,7 +758,6 @@ function PartnerScroller() {
       flexDirection: "column", 
       alignItems: "center", 
       justifyContent: "center",
-      scrollSnapAlign: "start",
       borderBottom: "1px solid rgba(255,255,255,0.03)"
     }}>
       <h3 style={{ 
@@ -758,12 +793,13 @@ function PartnerScroller() {
 }
 
 function Home({ goToProjects, setRoute }) {
+  const isMobile = window.innerWidth <= 800;
   return (
     <div>
       <div style={{ height: '100vh', scrollSnapAlign: 'start' }}><Hero /></div>
       <PartnerScroller />
       <CinemaReel mode="sticky" slides={HOME_SLIDES} withModal={false} onExplore={s => goToProjects(s.type)} />
-      <div style={{ scrollSnapAlign: 'start' }}><Footer setRoute={setRoute} /></div>
+      <div style={{ scrollSnapAlign: isMobile ? 'none' : 'start' }}><Footer setRoute={setRoute} /></div>
     </div>
   );
 }
@@ -975,7 +1011,7 @@ function Projects({ filter, setFilter }) {
   }, [filter]);
 
   return (
-    <div className="proj-wrapper" style={{ display: 'flex', height: '100vh', width: '100%', background: '#0a0908' }}>
+    <div className="proj-wrapper" style={{ display: 'flex', height: isMobile ? 'auto' : '100vh', minHeight: isMobile ? '100vh' : 'auto', width: '100%', background: '#0a0908' }}>
       <div className={`proj-sidebar ${sidebarOpen ? 'open' : 'closed'}`} style={{ display: 'flex', gap: isMobile ? 8 : 16, zIndex: 10, transition: 'all 0.4s ease', width: isMobile ? '100%' : (sidebarOpen ? 340 : 100), alignItems: isMobile ? 'center' : (sidebarOpen ? 'flex-start' : 'center'), padding: isMobile ? undefined : (sidebarOpen ? '120px 40px 40px' : '120px 20px 40px') }}>
          <div style={{ display: 'flex', justifyContent: sidebarOpen ? 'space-between' : 'center', alignItems: 'center', marginBottom: isMobile ? 0 : 10, width: isMobile ? 'auto' : '100%' }}>
            {sidebarOpen && !isMobile && <h2 style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.2em', opacity: 0.4, margin: 0 }}>FILTER</h2>}
@@ -988,7 +1024,7 @@ function Projects({ filter, setFilter }) {
          <FilterItem isOpen={sidebarOpen} active={filter==='3d'} onClick={()=>setFilter('3d')} label="3D Art" icon={Icons.art3d} />
          <FilterItem isOpen={sidebarOpen} active={filter==='motion'} onClick={()=>setFilter('motion')} label="Motion" icon={Icons.motion} />
       </div>
-      <div style={{ flex: 1, position: 'relative', height: '100vh' }}>
+      <div style={{ flex: 1, position: 'relative', height: isMobile ? 'auto' : '100vh' }}>
          {loading && (
            <div style={{ position: 'absolute', inset: 0, zIndex: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0908' }}>
              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.4em', color: 'rgba(255,255,255,0.5)', animation: 'pulse 1.5s infinite' }}>
@@ -1405,6 +1441,13 @@ function App() {
       setRoute('admin');
     }
     window.scrollTo(0, 0);
+
+    // Toggle scroll snap globally based on route
+    if (route === 'home') {
+      document.documentElement.style.scrollSnapType = 'y mandatory';
+    } else {
+      document.documentElement.style.scrollSnapType = 'none';
+    }
   }, [route]);
 
   const goToProjects = (type) => {
