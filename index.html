@@ -22,7 +22,10 @@
 <script src="./data.js"></script>
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; }
+  @media (min-width: 801px) {
+    html { scroll-snap-type: y mandatory; }
+  }
   body { 
     background: #0a0908; 
     color: #fff; 
@@ -467,7 +470,7 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
       for (let i = 0; i < TOTAL; i++) {
         const top = i * pitch + yR.current, sc = top + slideH / 2, dy = sc - vc, dn = Math.abs(dy) / slideH;
         if (imgRefs.current[i]) {
-          const factor = window.innerWidth <= 800 ? 8.0 : 1.2;
+          const factor = window.innerWidth <= 800 ? 10.0 : 1.2;
           imgRefs.current[i].style.transform = `translate3d(0,${(-dy / factor).toFixed(2)}px,0)`;
         }
         const c = contentRefs.current[i]; if (!c) continue;
@@ -517,6 +520,16 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
     }
   }, [getLay, setIdx, N, isSticky]);
 
+  useEffect(() => {
+    if (!trackRef.current) return;
+    const obs = new ResizeObserver(() => {
+      layR.current = getLay();
+    });
+    obs.observe(trackRef.current);
+    if (outerRefs.current[0]) obs.observe(outerRefs.current[0]);
+    return () => obs.disconnect();
+  }, [getLay, N]);
+
   const handleExplore = (slide) => {
     if (withModal) setOpenSlide(slide);
     else onExplore(slide);
@@ -537,10 +550,10 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
               <div style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden", borderRadius: 'clamp(16px, 4vw, 40px)', transformOrigin: "0% 50%", transformStyle: "preserve-3d", transform: isOpen ? "rotateY(12deg)" : "rotateY(0deg)", transition: "all 700ms cubic-bezier(0.22,1,0.36,1)" }}>
                 <div ref={el => imgRefs.current[i] = el} style={{ 
                   position: "absolute", 
-                  top: isMobile ? "-15%" : "50%", 
-                  left: isMobile ? "0" : "50%", 
-                  width: isMobile ? "100%" : "100vw", 
-                  height: isMobile ? "130%" : "120dvh", 
+                  top: isMobile ? "-10%" : "50%", 
+                  left: isMobile ? "-10%" : "50%", 
+                  width: isMobile ? "120%" : "100vw", 
+                  height: isMobile ? "120%" : "120dvh", 
                   marginTop: isMobile ? "0" : "-60dvh", 
                   marginLeft: isMobile ? "0" : "-50vw", 
                   willChange: "transform", 
@@ -1531,8 +1544,9 @@ function App() {
     }
     window.scrollTo(0, 0);
 
-    // Toggle scroll snap globally based on route
-    if (route === 'home') {
+    // Toggle scroll snap globally based on route and device size
+    const isMobile = window.innerWidth <= 800;
+    if (route === 'home' && !isMobile) {
       document.documentElement.style.scrollSnapType = 'y mandatory';
     } else {
       document.documentElement.style.scrollSnapType = 'none';
