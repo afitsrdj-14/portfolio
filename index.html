@@ -225,10 +225,10 @@ function LazyVideo({ src, style, className, autoPlay = true, loop = true, muted 
       }
       
       if (isMobile) {
-        // Mobile delay: play only after staying for 2 seconds
+        // Mobile delay: play only after staying for 400ms
         timer = setTimeout(() => {
           vid.play().catch(() => {});
-        }, 2000);
+        }, 400);
       } else {
         vid.play().catch(() => {});
       }
@@ -380,6 +380,13 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
   
   const [activeIdx, setActiveIdx] = useState(0);
   const [openSlide, setOpenSlide] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
+
+  useEffect(() => {
+    const cb = () => setIsMobile(window.innerWidth <= 800);
+    window.addEventListener('resize', cb);
+    return () => window.removeEventListener('resize', cb);
+  }, []);
 
   const layR = useRef(null);
 
@@ -502,9 +509,24 @@ function CinemaReel({ mode, slides, withModal, onExplore }) {
           return (
             <div key={slide.id} className="reel-slide" ref={el => outerRefs.current[i] = el} style={{ position: "relative", width: "100%", perspective: "2000px", opacity: 0 }}>
               <div style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden", borderRadius: 'clamp(16px, 4vw, 40px)', transformOrigin: "0% 50%", transformStyle: "preserve-3d", transform: isOpen ? "rotateY(12deg)" : "rotateY(0deg)", transition: "all 700ms cubic-bezier(0.22,1,0.36,1)" }}>
-                <div ref={el => imgRefs.current[i] = el} style={{ position: "absolute", top: "50%", left: "50%", width: "100vw", height: "120dvh", marginTop: "-60dvh", marginLeft: "-50vw", willChange: "transform", background: slide.gradient || "#050505" }}>
+                <div ref={el => imgRefs.current[i] = el} style={{ 
+                  position: "absolute", 
+                  top: isMobile ? "0" : "50%", 
+                  left: isMobile ? "0" : "50%", 
+                  width: isMobile ? "100%" : "100vw", 
+                  height: isMobile ? "100%" : "120dvh", 
+                  marginTop: isMobile ? "0" : "-60dvh", 
+                  marginLeft: isMobile ? "0" : "-50vw", 
+                  willChange: "transform", 
+                  background: slide.gradient || "#050505" 
+                }}>
                   {slide.vid ? (
-                    <LazyVideo src={slide.vid} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: 0.8 }} />
+                    <div style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
+                      {slide.img && (
+                        <img src={slide.img} loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.6, zIndex: 0 }} />
+                      )}
+                      <LazyVideo src={slide.vid} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: 0.8, zIndex: 1 }} />
+                    </div>
                   ) : slide.img ? (
                     <img src={slide.img} loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.8 }} />
                   ) : null}
@@ -796,8 +818,10 @@ function Home({ goToProjects, setRoute }) {
   const isMobile = window.innerWidth <= 800;
   return (
     <div>
-      <div style={{ height: '100vh', scrollSnapAlign: 'start' }}><Hero /></div>
-      <PartnerScroller />
+      <div style={{ scrollSnapAlign: 'start' }}>
+        <div style={{ height: '100vh' }}><Hero /></div>
+        <PartnerScroller />
+      </div>
       <CinemaReel mode="sticky" slides={HOME_SLIDES} withModal={false} onExplore={s => goToProjects(s.type)} />
       <div style={{ scrollSnapAlign: isMobile ? 'none' : 'start' }}><Footer setRoute={setRoute} /></div>
     </div>
@@ -826,13 +850,13 @@ function FadeIn({ children, delay = 0 }) {
 
 function ExperienceItem({ year, title, company, type }) {
   return (
-    <div style={{ display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '24px 0', gap: 24, flexWrap: 'wrap' }}>
-       <div style={{ width: 150, fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', opacity: 0.5, paddingTop: 4 }}>{year}</div>
+    <div style={{ display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '16px 0', gap: 16, flexWrap: 'wrap', alignItems: 'flex-start' }}>
+       <div style={{ width: 140, fontSize: 13, fontWeight: 700, letterSpacing: '0.05em', opacity: 0.5, paddingTop: 2 }}>{year}</div>
        <div style={{ flex: 1, minWidth: 200 }}>
-          <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 6 }}>{title}</div>
-          <div style={{ fontSize: 14, opacity: 0.7 }}>{company}</div>
+          <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 4, color: '#f6efe2' }}>{title}</div>
+          <div style={{ fontSize: 13, opacity: 0.85, fontWeight: 500 }}>{company}</div>
        </div>
-       <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.1em', background: 'rgba(255,255,255,0.05)', padding: '6px 16px', borderRadius: 999, height: 'fit-content' }}>
+       <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.05em', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)', padding: '4px 12px', borderRadius: 999, height: 'fit-content' }}>
           {type}
        </div>
     </div>
