@@ -4,7 +4,7 @@
 window.ABOUT_DATA = {
   "title": "Hola!<br/>I'm Afit.",
   "description": "a VFX & 3D Artist based in Jakarta, Indonesia.\n\nMy expertise lies in motion graphics, 3D FX & Animation, and VFX compositing. I strongly believe that the success of any project is rooted in great collaboration, open communication, and simply being kind.",
-  "resume": "https://drive.google.com/file/d/1DIQA9XyH7Q8MbhCdcpfQfUNhiulLAtX-/view?usp=drive_link",
+  "resume": "https://drive.google.com/file/d/1XJWtNVz9J8ztu6pLoxMaOExokqb_Vgcn/view?usp=sharing",
   "workExperience": [
     {
       "year": "Mar 2025 - Present",
