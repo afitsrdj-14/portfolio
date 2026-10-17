@@ -8,7 +8,7 @@ window.ABOUT_DATA = {
   "workExperience": [
     {
       "year": "Mar 2025 - Present",
-      "title": "Creative Designer",
+      "title": "Video & Motion Creative",
       "company": "PT. Sahabat Mikro Fintek",
       "type": "Full-Time"
     },
