@@ -62,7 +62,7 @@ window.CONTACT_DATA = {
   "instagram": "@afitsrdj",
   "instagramUrl": "https://www.instagram.com/afitsrdj",
   "youtube": "Afit Suradiradja",
-  "youtubeUrl": "https://youtube.com"
+  "youtubeUrl": "https://www.youtube.com/@afitsrdj"
 };
 
 window.HOME_SLIDES = [
